@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>upload image</title>
+  <link rel="stylesheet" href="uimage.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css">
+</head>
+<body>
+  <section class="top-bar">
+    <div class="back-btn" onclick="goToDashboard()">
+      <i class="fa-solid fa-arrow-left"></i>
+    </div>
+  </section>
+  <section class="title">
+    <h1>AI design from Image</h1>
+    <p>Upload your room image, add prompt and generate new design</p>
+  </section>
+  <section class="container">
+     <div class="left-panel">
+       <h3 class="section-title">1. Upload Image</h3>
+       <div class="upload-box" onclick="openExplorer()">
+         <img id="previewImage" class="preview" style="display:none;">
+         <div class="upload-placeholder" id="placeholder">
+           <i class="fa-solid fa-cloud-arrow-up"></i>
+           <h3>Click to upload image</h3>
+         </div>
+         <button class="close-btn" onclick="removeImage(event)">
+           <i class="fa-solid fa-xmark"></i>
+         </button>
+       </div>
+       <button class="change-btn" onclick="openExplorer()">
+         <i class="fa-regular fa-image"></i> change Image
+       </button>
+       <input type="file" id="fileInput" accept="image/*" hidden>
+       <div class="prompt-box">
+         <h3>2. Describe your design</h3>
+         <textarea name="input" id="prompt"></textarea>
+         <button class="generate-btn" onclick="generateDesign()">Generate Design</button>
+       </div>
+       <div class="quick-prompt">
+         <h3>Quick Prompt</h3>
+         <div class="quick-button">
+           <button onclick="setPrompt('Modern Style')">Modern Style</button>
+           <button onclick="setPrompt('Minimal Design')">Minimal Design</button>
+           <button onclick="setPrompt('Luxury Look')">Luxury Look</button>
+           <button onclick="setPrompt('Wooden Theme')">Wooden Theme</button>
+           <button onclick="setPrompt('Add Plants')">Add Plants</button>
+           <button onclick="setPrompt('Warm Lighting')">Warm Lighting</button>
+         </div>
+       </div>
+     </div>
+
+     <!-- right panel -->
+     <div class="right-panel">
+       <div class="top-action" style="display:flex !important; justify-content:space-between !important; align-items:center !important;">
+         <div>
+           <h3>3. AI Generated Design</h3>
+           <p style="color:gray; margin-top:5px;">Here is your AI generated room design</p>
+         </div>
+         <!-- DOWNLOAD BUTTON - AB YAHI NAZAR AYEGA -->
+         <div id="actionButtons" style="display:block !important;">
+           <button onclick="downloadDesign()" style="background:#C08A5A; color:white; border:none; padding:10px 20px; border-radius:8px; cursor:pointer; font-weight:bold; font-size:14px; box-shadow:0 2px 5px rgba(0,0,0,0.2);">
+             ⬇️ Download
+           </button>
+         </div>
+       </div>
+
+       <div class="result-box">
+         <img id="resultImage" class="result-image" style="display:none;">
+         <img src="img/undraw_image-editing_qqbe.svg" class="result-icon">
+         <div class="result-text">
+           <h2>AI Design will appear here</h2>
+           <p>Upload an image, add prompt and click Generate Design</p>
+         </div>
+       </div>
+     </div>
+  </section>
+  <!-- <script src="uimage.js"></script> -->
+   <script src="uimage.js?v=2"></script>
+<script>
+// Ye function direct HTML me laga diya hai - 100% chalega
+async function downloadDesign() {
+  const img = document.getElementById("resultImage");
+  if (!img ||!img.src || img.style.display === "none") {
+    alert("Pehle design generate karo!");
+    return;
+  }
+  try {
+    const cleanUrl = img.src.split('?')[0];
+    const response = await fetch(cleanUrl);
+    const blob = await response.blob();
+    const blobUrl = URL.createObjectURL(blob);
+    const link = document.createElement("a");
+    link.href = blobUrl;
+    link.download = "AI-Design-" + Date.now() + ".jpg";
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    URL.revokeObjectURL(blobUrl);
+  } catch (err) {
+    console.log(err);
+    window.open(img.src, '_blank');
+  }
+}
+</script>
+
+</body>
+</html>

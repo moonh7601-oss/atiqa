@@ -1,0 +1,264 @@
+@import url('https://fonts.googleapis.com/css2?family=Mulish:ital,wght@0,200..1000;1,200..1000&display=swap');
+*{
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+text-transform: capitalize;
+transition: all 0.5s linear;
+}
+body{
+ /* font-family: Arial, Helvetica, sans-serif; */
+ font-family: "Mulish", sans-serif;
+}
+.homepg{
+  height: 70vh;
+  width: 100%;
+  background: linear-gradient(rgba(0,0,0,0.6),rgba(0,0,0,0.6)),url('img/8.jpg');
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+  position: relative;
+}
+/* .logo{
+  color: #fff;
+  margin-left: 4%;
+  font-size: 30px;
+  font-weight: 400;
+} */
+/* Logo container */
+.logo {
+  display: flex;
+  align-items: center;
+}
+
+/* Logo ke andar ka link */
+.logo a {
+  display: block;
+}
+
+/* Logo Image ki styling */
+.logo img {
+  height: 80px;      /* Logo ki height - isko 40px se 60px ke beech rakhna best lagta hai */
+  width: auto;       /* Width auto rakho taake image stretch na ho */
+  display: block;    /* Neeche ka extra space hata deta hai */
+  object-fit: contain;
+}
+.navbar{
+  display: flex;
+  text-align: center;
+  position: fixed;
+  padding: 1% 2%;
+  width: 100%;
+  background-color: transparent;
+  transition: background-color 0.5s;
+  z-index: 1;
+  top: 0;
+}
+.navbar-items{
+  flex: 1;
+  text-align: right;
+  margin-top: 12px;
+}
+.navbar-items ul{
+  padding-right: 20px;
+}
+.navbar-items ul li{
+  list-style: none;
+  display: inline-block;
+}
+.navbar-items ul li a{
+  color: #fff;
+  padding: 0 16px;
+  text-decoration: none;
+  font-size: 17px;
+  font-weight: 600;
+  letter-spacing: 2px;
+}
+.navbar-items ul li a:hover{
+  color:burlywood;
+}
+.navbar.scrolled{
+  background-color: #181818;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+  padding: 15px 50px;
+}
+.nav button{
+  background-color: burlywood ; 
+  color: white;
+  padding: 10px 10px;
+  border-radius: 15px;
+}
+/* ___about */
+.sec{
+  width: 85%;
+  text-align: center;
+  margin: auto;
+  padding: 6% 0 3% 0;
+}
+.sub-heading{
+ 
+  display: flex;
+  align-items: flex-start;
+  text-align: left;
+  justify-content: space-between;
+  padding: 3% 0;
+  gap: 30px;
+}
+.sub-heading h1 ,
+.sub-heading p{
+  width: 50%;
+}
+.sub-heading h1{
+  font-size: 48px;
+  font-weight: 300;
+  line-height: 1.3;
+  max-width: 700px;
+}
+.sub-heading span{
+  color: burlywood;
+}
+.sub-heading p{
+  font-size: 15px;
+  color: #555;
+  line-height: 1.6;
+}
+.box{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+}
+.box img {
+  width: 60%;
+  display: block;
+}
+.A-box {
+  background-color: #ffddbb;
+  padding: 25px;
+  width: 300px;
+  position: absolute;
+  left: 8%;
+  bottom: 60px;
+  box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+}
+.A-box h1 {
+  font-size: 18px;
+  margin-bottom: 10px;
+}
+.A-box p {
+  font-size: 14px;
+  line-height: 1.5;
+}
+.btn1{
+  text-decoration: none;
+  color: #000;
+  border: solid 2px burlywood;
+  padding: 15px 13px;
+  font-size: 18px;
+  background-color: burlywood;
+  font-weight: 500;
+  cursor: pointer;
+}
+.btn1:hover{
+  background-color: transparent;
+  transition: 1s;
+}
+/* feature */
+.features-container {
+  display: flex;
+  justify-content: space-around; /* Items ke darmiyan barabar jagah */
+  align-items: flex-start;
+  padding: 50px;
+  font-family: 'Arial', sans-serif; /* Ya jo bhi aap use karna chahen */
+  gap: 30px; /* Har item ke beech ka faasla */
+}
+
+.feature-item {
+  display: flex; /* Icon aur text ko ek line mein rakhne ke liye */
+  max-width: 350px; /* Ek block ki width */
+  align-items: flex-start;
+}
+
+.icon-box {
+  margin-right: 15px; /* Icon aur text ke darmiyan space */
+}
+
+.icon-box i{
+   width: 60px;/* Icon ka size adjust karein */
+  height: auto;
+ font-size: 50px;
+}
+
+.content h3 {
+  margin: 0 0 10px 0;
+  font-size: 1.2rem;
+  color: #2c3e50; /* Heading ka color */
+  font-weight: bold;
+}
+
+.content p {
+  margin: 0;
+  font-size: 0.95rem;
+  color: #7f8c8d; /* Paragraph ka halka gray color */
+  line-height: 1.5; /* Line spacing */
+}
+
+.feature-item i:hover ,h3:hover{
+  color: rgb(192, 162, 125);
+}
+/* Call to action */
+.cta-section{
+  padding: 60px 40px;
+  /* background: burlywood; */
+  /* background: #0f0f0f; */
+}
+.cta-box{
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  /* background: linear-gradient(135deg, #d8b58c, #b08a5a); */
+  background-color: #000;
+  color: white;
+  padding: 30px 40px;
+  border-radius: 15px;
+}
+.cta-text h2{
+  font-size: 26px;
+  margin-bottom: 10px;
+}
+.cta-text p{
+  font-size: 14px;
+  font-weight: 500;
+}
+.cta-button button{
+  background-color: burlywood ; 
+  color: white;
+  padding: 10px 10px;
+  border-radius: 15px;
+}
+/* fotter */
+.footer{
+  padding: 5% 1%;
+  display: flex;
+  justify-content: center;
+  background-color: #565656;
+  color: #fff;
+}
+.f-box{
+  flex-basis: 21%;
+}
+.f-box li{
+  list-style: none;
+  color: #fff;
+  padding: 7px 0;
+}
+.f-box h2{
+  color: rgb(222, 184, 135);
+  padding-bottom: 12px;
+}
+footer{
+  text-align: center;
+  background-color: #313030;
+  padding: 10px 0;
+  color:#fff;
+}

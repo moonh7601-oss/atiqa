@@ -1,0 +1,6015 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Design Page</title>
+
+    <!-- BOOTSTRAP -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- FONT AWESOME -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+
+    <!-- FABRIC.JS -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/fabric.js/5.3.0/fabric.min.js"></script>
+
+    <!-- CUSTOM CSS -->
+    <link rel="stylesheet" href="design.css">
+</head>
+
+<body>
+
+<!-- TOP NAVBAR -->
+<header class="topbar">
+    <div class="logo-area">
+        <!-- <i class="fa-solid fa-chevron-left back-icon" id="backBtn" onclick="goToRoomSelect()"></i> -->
+        <!-- <i class="fa-solid fa-chevron-left back-icon"></i> -->
+
+        <button class="nav-icon" title="Undo">
+            <i class="fa-solid fa-rotate-left"></i>
+        </button>
+        <button class="nav-icon" title="Redo">
+            <i class="fa-solid fa-rotate-right"></i>
+        </button>
+    </div>
+
+    <!-- 2D / 3D TOGGLE -->
+    <div class="view-switch">
+        <button id="btn2D" class="view-btn active">2D</button>
+        <button id="btn3D" class="view-btn">3D</button>
+    </div>
+
+    <!-- RIGHT CONTROLS -->
+    <div class="top-actions">
+        <!-- <button title="Duplicate"><i class="fa-regular fa-copy"></i></button> -->
+        <button class="share-btn" id="downloadBtn">
+    <i class="fa-solid fa-download"></i> Download
+</button>
+        </button>
+        <!-- Comments Icon -->
+        <button class="comment-toggle" id="commentToggle" title="Comments">
+            <i class="fa-regular fa-comment"></i>
+        </button>
+
+        <!-- <button class="demo-btn">Book a Demo Call</button> -->
+        <div class="profile"><i class="fa-solid fa-user"></i></div>
+    </div>
+</header>
+
+
+    <!-- ==================== OVERLAY / MODAL ==================== -->
+    
+    <!-- ========== COMMENTS PANEL (SLIDE-OUT) ========== -->
+<div class="comments-overlay" id="commentsOverlay">
+    <div class="comments-panel">
+        <!-- Header -->
+        <div class="comments-header">
+            <h3><i class="fa-regular fa-comment"></i> Comments</h3>
+            <button class="close-comments" id="closeComments">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+
+        <!-- Filter / Show dropdown -->
+        <div class="comments-filter">
+            <label>Show:</label>
+            <select id="commentFilter">
+                <option value="all">All comments</option>
+                <option value="mine">My comments</option>
+                <option value="resolved">Resolved</option>
+            </select>
+        </div>
+
+        <!-- Comments List -->
+        <div class="comments-list" id="commentsList">
+            <!-- Dummy comment 1 -->
+            <div class="comment-item">
+                <div class="comment-avatar">
+                    <i class="fas fa-user"></i>
+                </div>
+                <div class="comment-body">
+                    <div class="comment-meta">
+                        <span class="comment-user">User 244095254</span>
+                        <span class="comment-time">Just now</span>
+                    </div>
+                    <div class="comment-text">
+                        Guest Room (29.265 m²) – Wall colour should be lighter.
+                    </div>
+                </div>
+            </div>
+
+            <!-- Dummy comment 2 -->
+            <div class="comment-item">
+                <div class="comment-avatar">
+                    <i class="fas fa-user" ></i>
+                </div>
+                <div class="comment-body">
+                    <div class="comment-meta">
+                        <span class="comment-user">Designer Anna</span>
+                        <span class="comment-time">2 hours ago</span>
+                    </div>
+                    <div class="comment-text">
+                        Kitchen wall – add more power outlets near the counter.
+                    </div>
+                </div>
+            </div>
+
+            <!-- Dummy comment 3 -->
+            <div class="comment-item">
+                <div class="comment-avatar">
+                    <i class="fas fa-user" ></i>
+                </div>
+                <div class="comment-body">
+                    <div class="comment-meta">
+                        <span class="comment-user">Client Mike</span>
+                        <span class="comment-time">Yesterday</span>
+                    </div>
+                    <div class="comment-text">
+                        Living room – remove the false ceiling in the center.
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Add new comment -->
+        <div class="comment-input-area">
+            <input type="text" id="newCommentInput" placeholder="Write a comment..." />
+            <button id="sendCommentBtn"><i class="fas fa-paper-plane"></i></button>
+        </div>
+    </div>
+</div>
+<!-- =====================================================
+     MAIN APPLICATION
+===================================================== -->
+
+<div class="app-container">
+
+    <!-- =================================================
+         LEFT ICON BAR
+    ================================================== -->
+
+    <aside class="icon-sidebar">
+
+        <!-- SEARCH -->
+        <button class="side-icon active"
+                id="searchBtn"
+                data-panel="searchPanel"
+                title="Search">
+
+            <i class="fa-solid fa-magnifying-glass"></i>
+
+        </button>
+
+
+        <!-- BUILD -->
+        <button class="side-icon"
+                id="buildBtn"
+                data-panel="buildPanel"
+                title="Build Options">
+
+            <i class="fa-solid fa-house"></i>
+
+        </button>
+
+
+        <!-- FURNITURE -->
+        <button class="side-icon"
+                id="furnitureBtn"
+                data-panel="furniturePanel"
+                title="Furniture">
+
+            <i class="fa-solid fa-couch"></i>
+
+        </button>
+
+
+        <!-- OUTDOOR -->
+        <button class="side-icon"
+                id="outdoorBtn"
+                data-panel="outdoorPanel"
+                title="Outdoor">
+
+            <i class="fa-solid fa-tree"></i>
+
+        </button>
+
+
+        <!-- PEOPLE -->
+        <button class="side-icon"
+                id="peopleBtn"
+                data-panel="peoplePanel"
+                title="People">
+
+            <i class="fa-solid fa-users"></i>
+
+        </button>
+
+
+        <!-- NEW -->
+        <button class="side-icon new-icon"
+                id="newBtn"
+                data-panel="newPanel"
+                title="New">
+
+            NEW
+
+        </button>
+
+
+        <!-- STRUCTURE -->
+        <button class="side-icon"
+                id="structureBtn"
+                data-panel="structurePanel"
+                title="Structure">
+
+            <i class="fa-solid fa-cubes"></i>
+
+        </button>
+
+
+        <!-- CHAIRS -->
+        <button class="side-icon"
+                id="chairsBtn"
+                data-panel="chairsPanel"
+                title="Chairs">
+
+            <i class="fa-solid fa-chair"></i>
+
+        </button>
+
+    </aside>
+
+
+    <!-- =================================================
+         LEFT SIDE PANELS
+    ================================================== -->
+
+    <div class="side-panels panel-hidden"  id="sidePanels">
+        <button class="side-panel-close" id="closeSidePanel" title="Close Panel">
+            <i class="fa-solid fa-xmark"></i>
+        </button>
+        <!-- =================================================
+             SEARCH PANEL
+        ================================================== -->
+
+        <div class="side-panel active"
+             id="searchPanel">
+
+            <h4>Search</h4>
+
+            <input
+                type="text"
+                class="form-control"
+                placeholder="Search furniture...">
+
+        </div>
+
+
+        <!-- =================================================
+             BUILD PANEL
+        ================================================== -->
+
+        <div class="side-panel"
+             id="buildPanel">
+
+            <h4>Build Options</h4>
+
+
+            <!-- BUILD CARDS -->
+
+            <div class="cards-grid">
+
+
+                <!-- DRAW WALLS -->
+
+                <div class="card"
+                     onclick="selectOption('Draw Walls')">
+
+                    <i class="fa-solid fa-circle-info card-info"></i>
+
+                    <div class="card-img-placeholder">
+
+                        <i class="fa-solid fa-pen-ruler"></i>
+
+                    </div>
+
+                    <div class="card-title">
+                        Draw Walls
+                    </div>
+
+                </div>
+
+
+                <!-- ROOMS -->
+
+                <div class="card"
+                     onclick="selectOption('Rooms')">
+
+                    <div class="card-img-placeholder">
+
+                        <i class="fa-solid fa-cube"></i>
+
+                    </div>
+
+                    <div class="card-title">
+                        Rooms
+                    </div>
+
+                </div>
+
+
+                <!-- SMART WIZARD -->
+
+                <div class="card"
+                     onclick="selectOption('Smart Wizard')">
+
+                    <div class="card-img-placeholder">
+
+                        <i class="fa-solid fa-wand-magic-sparkles"></i>
+
+                    </div>
+
+                    <div class="card-title">
+                        Smart Wizard
+                    </div>
+
+                </div>
+
+
+                <!-- FORMS -->
+
+                <div class="card"
+                     onclick="selectOption('Forms')">
+
+                    <div class="card-img-placeholder">
+
+                        <i class="fa-solid fa-shapes"></i>
+
+                    </div>
+
+                    <div class="card-title">
+                        Forms
+                    </div>
+
+                </div>
+
+            </div>           
+<!-- =================================================
+     CONSTRUCTION
+================================================= -->
+
+<div class="construction-section">
+    <h4>Construction</h4>
+    
+    <div class="construction-grid">
+    
+        <!-- ==================== DOORS ==================== -->
+        <div class="build-option"
+             onclick="openConstructionCategory('Doors')">
+    
+            <i class="fa-solid fa-door-open"></i>
+            <span>Doors</span>
+    
+        </div>
+    
+        <!-- ==================== WINDOWS ==================== -->
+        <div class="build-option"
+             onclick="openConstructionCategory('Windows')">
+    
+            <i class="fa-solid fa-window-maximize"></i>
+            <span>Windows</span>
+    
+        </div>
+    
+        <!-- ==================== STAIRS ==================== -->
+        <div class="build-option"
+             onclick="openConstructionCategory('Stairs')">
+    
+            <i class="fa-solid fa-stairs"></i>
+            <span>Stairs</span>
+    
+        </div>
+    
+        <!-- ==================== ARCHS ==================== -->
+        <div class="build-option"
+             onclick="openConstructionCategory('Archs')">
+    
+            <i class="fa-solid fa-archway"></i>
+            <span>Archs</span>
+    
+        </div>
+<!--     
+        <!-- ==================== PARTITION ==================== --
+        <div class="build-option"
+             onclick="openConstructionCategory('Partition')">
+    
+            <i class="fa-solid fa-table-columns"></i>
+            <span>Partition</span>
+    
+        </div>
+    
+        <!-- ==================== ROOFS ==================== --
+        <div class="build-option"
+             onclick="openConstructionCategory('Roofs')">
+    
+            <i class="fa-solid fa-house"></i>
+            <span>Roofs</span>
+    
+        </div> -->
+    
+        <!-- ==================== FIREPLACE ==================== -->
+        <div class="build-option"
+             onclick="openConstructionCategory('Fireplace')">
+    
+            <i class="fa-solid fa-fire"></i>
+            <span>Fireplace</span>
+    
+        </div>
+    
+        <!-- ==================== COLUMN ==================== -->
+        <div class="build-option"
+             onclick="openConstructionCategory('Column')">
+    
+            <i class="fa-solid fa-building-columns"></i>
+            <span>Column</span>
+    
+        </div>
+    
+        <!-- ==================== TERRACE ====================
+        <div class="build-option"
+             onclick="openConstructionCategory('Terrace')">
+    
+            <i class="fa-solid fa-umbrella-beach"></i>
+            <span>Terrace</span>
+    
+        </div>
+    
+         <!-- ==================== FENCES & GATES ==================== -->
+        <div class="build-option"
+             onclick="openConstructionCategory('Fences & Gates')">
+    
+            <i class="fa-solid fa-fence"></i>
+            <span>Fences &amp; Gates</span>
+    
+        </div> 
+    
+    </div>
+    
+    </div>
+    
+    <!-- =================================================
+         CONSTRUCTION CATEGORY VIEWS
+    ================================================= -->
+    
+    <!-- =================================================
+         DOORS
+    ================================================= -->
+    
+    <div class="subcategory-view" id="constructionDoorsView">
+    <div class="subcategory-heading">
+        <button type="button" class="construction-back-button" onclick="closeConstructionCategory()">
+             <i class="fa-solid fa-arrow-left"></i> <span>Back</span> </button>
+        <span>Doors</span>
+    </div>
+    
+    <div class="furniture-grid">
+    
+        <div class="furniture-card"
+             draggable="true"
+             data-type="Door"
+             data-model="models/construction/doors/door1.glb">
+    
+            <div class="card-image">
+                <img src="models/construction/door/door1.png"
+                     alt="Door 1"
+                     class="furniture-thumbnail"
+                     onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+    
+                <i class="fa-solid fa-door-open thumbnail-fallback"
+                   aria-hidden="true"
+                   style="display:none;"></i>
+            </div>
+    
+            <span>Door 1</span>
+    
+        </div>
+        <!-- door2 -->
+        <div class="furniture-card"
+        draggable="true"
+        data-type="Door"
+        data-model="models/construction/doors/door2.glb">
+
+       <div class="card-image">
+           <img src="models/construction/door/door2.png"
+                alt="Door 2"
+                class="furniture-thumbnail"
+                onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+
+           <i class="fa-solid fa-door-open thumbnail-fallback"
+              aria-hidden="true"
+              style="display:none;"></i>
+       </div>
+
+       <span>Door 2</span>
+
+   </div>
+   <!-- door3 -->
+   <div class="furniture-card"
+   draggable="true"
+   data-type="Door"
+   data-model="models/construction/doors/door3.glb">
+
+  <div class="card-image">
+      <img src="models/construction/door/door3.png"
+           alt="Door 3"
+           class="furniture-thumbnail"
+           onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+
+      <i class="fa-solid fa-door-open thumbnail-fallback"
+         aria-hidden="true"
+         style="display:none;"></i>
+  </div>
+
+  <span>Door 3</span>
+
+</div>
+<!-- door4 -->
+ <div class="furniture-card"
+draggable="true"
+data-type="Door"
+data-model="models/construction/doors/door4.glb">
+
+<div class="card-image">
+   <img src="models/construction/door/door4.png"
+        alt="Door 4"
+        class="furniture-thumbnail"
+        onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+
+   <i class="fa-solid fa-door-open thumbnail-fallback"
+      aria-hidden="true"
+      style="display:none;"></i>
+</div>
+
+<span>Door 4</span>
+
+</div>
+<!-- door5 -->
+<div class="furniture-card"
+draggable="true"
+data-type="Door"
+data-model="models/construction/doors/door5.glb">
+
+<div class="card-image">
+   <img src="models/construction/door/door5.png"
+        alt="Door 5"
+        class="furniture-thumbnail"
+        onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+
+   <i class="fa-solid fa-door-open thumbnail-fallback"
+      aria-hidden="true"
+      style="display:none;"></i>
+</div>
+
+<span>Door 5</span>
+
+</div>
+<!-- door6 -->
+<div class="furniture-card"
+draggable="true"
+data-type="Door"
+data-model="models/construction/doors/door6.glb">
+
+<div class="card-image">
+   <img src="models/construction/door/door6.jpg"
+        alt="Door 6"
+        class="furniture-thumbnail"
+        onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+
+   <i class="fa-solid fa-door-open thumbnail-fallback"
+      aria-hidden="true"
+      style="display:none;"></i>
+</div>
+
+<span>Door 6</span>
+
+</div>
+<!-- door7 -->
+<div class="furniture-card"
+draggable="true"
+data-type="Door"
+data-model="models/construction/doors/door7.glb">
+
+<div class="card-image">
+   <img src="models/construction/door/door7.png"
+        alt="Door 7"
+        class="furniture-thumbnail"
+        onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+
+   <i class="fa-solid fa-door-open thumbnail-fallback"
+      aria-hidden="true"
+      style="display:none;"></i>
+</div>
+
+<span>Door 7</span>
+
+</div>
+<!-- door8 -->
+ <div class="furniture-card"
+draggable="true"
+data-type="Door"
+data-model="models/construction/doors/door8.glb">
+
+<div class="card-image">
+   <img src="models/construction/door/door8.png"
+        alt="Door 8"
+        class="furniture-thumbnail"
+        onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+
+   <i class="fa-solid fa-door-open thumbnail-fallback"
+      aria-hidden="true"
+      style="display:none;"></i>
+</div>
+
+<span>Door 8</span>
+
+</div> 
+<!-- door9 -->
+<div class="furniture-card"
+draggable="true"
+data-type="Door"
+data-model="models/construction/doors/door9.glb">
+
+<div class="card-image">
+   <img src="models/construction/door/door9.png"
+        alt="Door 9"
+        class="furniture-thumbnail"
+        onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+
+   <i class="fa-solid fa-door-open thumbnail-fallback"
+      aria-hidden="true"
+      style="display:none;"></i>
+</div>
+
+<span>Door 9</span>
+
+</div>
+<!-- door10 -->
+<div class="furniture-card"
+draggable="true"
+data-type="Door"
+data-model="models/construction/doors/door10.glb">
+
+<div class="card-image">
+   <img src="models/construction/door/door10.png"
+        alt="Door 10"
+        class="furniture-thumbnail"
+        onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+
+   <i class="fa-solid fa-door-open thumbnail-fallback"
+      aria-hidden="true"
+      style="display:none;"></i>
+</div>
+
+<span>Door 10</span>
+
+</div>
+<!-- door11 -->
+<div class="furniture-card"
+draggable="true"
+data-type="Door"
+data-model="models/construction/doors/door11.glb">
+
+<div class="card-image">
+   <img src="models/construction/door/door11.png"
+        alt="Door 11"
+        class="furniture-thumbnail"
+        onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+
+   <i class="fa-solid fa-door-open thumbnail-fallback"
+      aria-hidden="true"
+      style="display:none;"></i>
+</div>
+
+<span>Door 11</span>
+
+</div> 
+<!-- door12 -->
+<div class="furniture-card"
+             draggable="true"
+             data-type="Door"
+             data-model="models/construction/doors/door12.glb">
+    
+            <div class="card-image">
+                <img src="models/construction/door/door12.png"
+                     alt="Door 12"
+                     class="furniture-thumbnail"
+                     onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+    
+                <i class="fa-solid fa-door-open thumbnail-fallback"
+                   aria-hidden="true"
+                   style="display:none;"></i>
+            </div>
+    
+            <span>Door 12</span>
+    
+        </div>
+        <!-- door13 -->
+<div class="furniture-card"
+draggable="true"
+data-type="Door"
+data-model="models/construction/doors/door13.glb">
+
+<div class="card-image">
+   <img src="models/construction/door/door13.png"
+        alt="Door 13"
+        class="furniture-thumbnail"
+        onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+
+   <i class="fa-solid fa-door-open thumbnail-fallback"
+      aria-hidden="true"
+      style="display:none;"></i>
+</div>
+
+<span>Door 13</span>
+
+</div>
+<!-- door14 -->
+<div class="furniture-card"
+draggable="true"
+data-type="Door"
+data-model="models/construction/doors/door14.glb">
+
+<div class="card-image">
+   <img src="models/construction/door/door14.png"
+        alt="Door 14"
+        class="furniture-thumbnail"
+        onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+
+   <i class="fa-solid fa-door-open thumbnail-fallback"
+      aria-hidden="true"
+      style="display:none;"></i>
+</div>
+
+<span>Door 14</span>
+
+</div>
+<!-- door15 -->
+ <div class="furniture-card"
+draggable="true"
+data-type="Door"
+data-model="models/construction/doors/door15.glb">
+
+<div class="card-image">
+   <img src="models/construction/door/door15.png"
+        alt="Door 15"
+        class="furniture-thumbnail"
+        onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+
+   <i class="fa-solid fa-door-open thumbnail-fallback"
+      aria-hidden="true"
+      style="display:none;"></i>
+</div>
+
+<span>Door 15</span>
+
+</div> 
+<!-- door16 -->
+<div class="furniture-card"
+draggable="true"
+data-type="Door"
+data-model="models/construction/doors/door16.glb">
+
+<div class="card-image">
+   <img src="models/construction/door/door16.png"
+        alt="Door 16"
+        class="furniture-thumbnail"
+        onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+
+   <i class="fa-solid fa-door-open thumbnail-fallback"
+      aria-hidden="true"
+      style="display:none;"></i>
+</div>
+
+<span>Door 16</span>
+
+</div>
+<!-- door17 -->
+<div class="furniture-card"
+draggable="true"
+data-type="Door"
+data-model="models/construction/doors/door17.glb">
+
+<div class="card-image">
+   <img src="models/construction/door/door17.png"
+        alt="Door 17"
+        class="furniture-thumbnail"
+        onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+
+   <i class="fa-solid fa-door-open thumbnail-fallback"
+      aria-hidden="true"
+      style="display:none;"></i>
+</div>
+
+<span>Door 17</span>
+
+</div>
+<!-- door18 -->
+<div class="furniture-card"
+draggable="true"
+data-type="Door"
+data-model="models/construction/doors/door18.glb">
+
+<div class="card-image">
+   <img src="models/construction/door/door18.png"
+        alt="Door 18"
+        class="furniture-thumbnail"
+        onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+
+   <i class="fa-solid fa-door-open thumbnail-fallback"
+      aria-hidden="true"
+      style="display:none;"></i>
+</div>
+
+<span>Door 18</span>
+
+</div> 
+<!-- door19 -->
+<div class="furniture-card"
+             draggable="true"
+             data-type="Door"
+             data-model="models/construction/doors/door19.glb">
+    
+            <div class="card-image">
+                <img src="models/construction/door/door19.png"
+                     alt="Door 19"
+                     class="furniture-thumbnail"
+                     onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+    
+                <i class="fa-solid fa-door-open thumbnail-fallback"
+                   aria-hidden="true"
+                   style="display:none;"></i>
+            </div>
+    
+            <span>Door 19</span>
+    
+        </div>
+        <!-- door20 -->
+<div class="furniture-card"
+draggable="true"
+data-type="Door"
+data-model="models/construction/doors/door20.glb">
+
+<div class="card-image">
+   <img src="models/construction/door/door20.png"
+        alt="Door 20"
+        class="furniture-thumbnail"
+        onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+
+   <i class="fa-solid fa-door-open thumbnail-fallback"
+      aria-hidden="true"
+      style="display:none;"></i>
+</div>
+
+<span>Door 20</span>
+
+</div>
+    
+        <!-- Door 2-20 cards yahan isi structure mein add karein -->
+    
+    </div>
+    </div>
+    
+    <!-- =================================================
+         WINDOWS
+    ================================================= -->
+    
+    <div class="subcategory-view" id="constructionWindowsView">
+    <div class="subcategory-heading">
+        <button type="button" class="construction-back-button" onclick="closeConstructionCategory()"> 
+            <i class="fa-solid fa-arrow-left">
+            </i> <span>Back</span> 
+        </button>
+        <span>Windows</span>
+    </div>
+    
+    <div class="furniture-grid">
+    
+        <div class="furniture-card"
+             draggable="true"
+             data-type="Window"
+             data-model="models/construction/windows/window1.glb">
+    
+            <div class="card-image">
+                <img src="models/construction/window/window1.png"
+                     alt="Window 1"
+                     class="furniture-thumbnail"
+                     onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+    
+                <i class="fa-solid fa-window-maximize thumbnail-fallback"
+                   aria-hidden="true"
+                   style="display:none;"></i>
+            </div>
+    
+            <span>Window 1</span>
+        </div>
+        <!-- window2 -->
+        <div class="furniture-card"
+        draggable="true"
+        data-type="Window"
+        data-model="models/construction/windows/window2.glb">
+
+       <div class="card-image">
+           <img src="models/construction/window/window2.png"
+                alt="Window 2"
+                class="furniture-thumbnail"
+                onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+
+           <i class="fa-solid fa-window-maximize thumbnail-fallback"
+              aria-hidden="true"
+              style="display:none;"></i>
+       </div>
+
+       <span>Window 2</span>
+   </div> 
+   <!-- window3 -->
+   <div class="furniture-card"
+   draggable="true"
+   data-type="Window"
+   data-model="models/construction/windows/window3.glb">
+
+  <div class="card-image">
+      <img src="models/construction/window/window3.png"
+           alt="Window 3"
+           class="furniture-thumbnail"
+           onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+
+      <i class="fa-solid fa-window-maximize thumbnail-fallback"
+         aria-hidden="true"
+         style="display:none;"></i>
+  </div>
+
+  <span>Window 3</span>
+</div>
+<!-- window4 -->
+<div class="furniture-card"
+draggable="true"
+data-type="Window"
+data-model="models/construction/windows/window4.glb">
+
+<div class="card-image">
+   <img src="models/construction/window/window4.png"
+        alt="Window 4"
+        class="furniture-thumbnail"
+        onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+
+   <i class="fa-solid fa-window-maximize thumbnail-fallback"
+      aria-hidden="true"
+      style="display:none;"></i>
+</div>
+
+<span>Window 4</span>
+</div>
+<!-- window5 -->
+<div class="furniture-card"
+draggable="true"
+data-type="Window"
+data-model="models/construction/windows/window5.glb">
+
+<div class="card-image">
+   <img src="models/construction/window/window5.png"
+        alt="Window 5"
+        class="furniture-thumbnail"
+        onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+
+   <i class="fa-solid fa-window-maximize thumbnail-fallback"
+      aria-hidden="true"
+      style="display:none;"></i>
+</div>
+
+<span>Window 5</span>
+</div> 
+<!-- window6 -->
+<div class="furniture-card"
+draggable="true"
+data-type="Window"
+data-model="models/construction/windows/window6.glb">
+
+<div class="card-image">
+   <img src="models/construction/window/window6.png"
+        alt="Window 6"
+        class="furniture-thumbnail"
+        onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+
+   <i class="fa-solid fa-window-maximize thumbnail-fallback"
+      aria-hidden="true"
+      style="display:none;"></i>
+</div>
+
+<span>Window 6</span>
+</div> 
+<!--    window7 -->
+<div class="furniture-card"
+draggable="true"
+data-type="Window"
+data-model="models/construction/windows/window7.glb">
+
+<div class="card-image">
+   <img src="models/construction/window/window7.png"
+        alt="Window 7"
+        class="furniture-thumbnail"
+        onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+
+   <i class="fa-solid fa-window-maximize thumbnail-fallback"
+      aria-hidden="true"
+      style="display:none;"></i>
+</div>
+
+<span>Window 7</span>
+</div>
+<!-- window8 -->
+ <div class="furniture-card"
+draggable="true"
+data-type="Window"
+data-model="models/construction/windows/window8.glb">
+
+<div class="card-image">
+   <img src="models/construction/window/window8.png"
+        alt="Window 8"
+        class="furniture-thumbnail"
+        onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+
+   <i class="fa-solid fa-window-maximize thumbnail-fallback"
+      aria-hidden="true"
+      style="display:none;"></i>
+</div>
+
+<span>Window 8</span>
+</div>
+<!-- window9 -->
+ <div class="furniture-card"
+draggable="true"
+data-type="Window"
+data-model="models/construction/windows/window9.glb">
+
+<div class="card-image">
+   <img src="models/construction/window/window9.png"
+        alt="Window 9"
+        class="furniture-thumbnail"
+        onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+
+   <i class="fa-solid fa-window-maximize thumbnail-fallback"
+      aria-hidden="true"
+      style="display:none;"></i>
+</div>
+
+<span>Window 9</span>
+
+</div> 
+<!-- window10 -->
+ <div class="furniture-card"
+draggable="true"
+data-type="Window"
+data-model="models/construction/windows/window10.glb">
+
+<div class="card-image">
+   <img src="models/construction/window/window10.png"
+        alt="Window 10"
+        class="furniture-thumbnail"
+        onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+
+   <i class="fa-solid fa-window-maximize thumbnail-fallback"
+      aria-hidden="true"
+      style="display:none;"></i>
+</div>
+
+<span>Window 10</span>
+</div> 
+<!-- window11 -->
+<div class="furniture-card"
+draggable="true"
+data-type="Window"
+data-model="models/construction/windows/window11.glb">
+
+<div class="card-image">
+   <img src="models/construction/window/window11.png"
+        alt="Window 11"
+        class="furniture-thumbnail"
+        onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+
+   <i class="fa-solid fa-window-maximize thumbnail-fallback"
+      aria-hidden="true"
+      style="display:none;"></i>
+</div>
+
+<span>Window 11</span>
+</div>
+ <!--window12  -->
+<div class="furniture-card"
+draggable="true"
+data-type="Window"
+data-model="models/construction/windows/window12.glb">
+
+<div class="card-image">
+   <img src="models/construction/window/window12.png"
+        alt="Window 12"
+        class="furniture-thumbnail"
+        onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+
+   <i class="fa-solid fa-window-maximize thumbnail-fallback"
+      aria-hidden="true"
+      style="display:none;"></i>
+</div>
+
+<span>Window 12</span>
+</div>
+<!-- window 13 -->
+<div class="furniture-card" 
+draggable="true"
+data-type="Window"
+data-model="models/construction/windows/window13.glb">
+
+<div class="card-image">
+   <img src="models/construction/window/window13.png"
+        alt="Window 13"
+        class="furniture-thumbnail"
+        onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+
+   <i class="fa-solid fa-window-maximize thumbnail-fallback"
+      aria-hidden="true"
+      style="display:none;"></i>
+</div>
+
+<span>Window 13</span>
+</div> 
+<!-- window14 -->
+<div class="furniture-card"
+draggable="true"
+data-type="Window"
+data-model="models/construction/windows/window14.glb">
+
+<div class="card-image">
+   <img src="models/construction/window/window14.png"
+        alt="Window 14"
+        class="furniture-thumbnail"
+        onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+
+   <i class="fa-solid fa-window-maximize thumbnail-fallback"
+      aria-hidden="true"
+      style="display:none;"></i>
+</div>
+
+<span>Window 14</span>
+</div>
+<!-- window     15 -->
+<div class="furniture-card"
+draggable="true"
+data-type="Window"
+data-model="models/construction/windows/window15.glb">
+
+<div class="card-image">
+   <img src="models/construction/window/window15.png"
+        alt="Window 15"
+        class="furniture-thumbnail"
+        onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+
+   <i class="fa-solid fa-window-maximize thumbnail-fallback"
+      aria-hidden="true"
+      style="display:none;"></i>
+</div>
+
+<span>Window 15</span>
+</div>
+<!-- window16 -->
+<div class="furniture-card"
+draggable="true"
+data-type="Window"
+data-model="models/construction/windows/window16.glb">
+
+<div class="card-image">
+   <img src="models/construction/window/window16.png"
+        alt="Window 16"
+        class="furniture-thumbnail"
+        onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+
+   <i class="fa-solid fa-window-maximize thumbnail-fallback"
+      aria-hidden="true"
+      style="display:none;"></i>
+</div>
+
+<span>Window 16</span>
+
+</div>
+<!-- window17 -->
+<div class="furniture-card"
+draggable="true"
+data-type="Window"
+data-model="models/construction/windows/window17.glb">
+
+<div class="card-image">
+   <img src="models/construction/window/window17.png"
+        alt="Window 1"
+        class="furniture-thumbnail"
+        onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+
+   <i class="fa-solid fa-window-maximize thumbnail-fallback"
+      aria-hidden="true"
+      style="display:none;"></i>
+</div>
+
+<span>Window 17</span>
+
+</div>
+<!-- window18 -->
+ <div class="furniture-card"
+draggable="true"
+data-type="Window"
+data-model="models/construction/windows/window18.glb">
+
+<div class="card-image">
+   <img src="models/construction/window/window18.png"
+        alt="Window 18"
+        class="furniture-thumbnail"
+        onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+
+   <i class="fa-solid fa-window-maximize thumbnail-fallback"
+      aria-hidden="true"
+      style="display:none;"></i>
+</div>
+
+<span>Window 18</span>
+</div>
+<!-- window19 -->
+ <div class="furniture-card"
+draggable="true"
+data-type="Window"
+data-model="models/construction/windows/window19.glb">
+
+<div class="card-image">
+   <img src="models/construction/window/window19.png"
+        alt="Window 19"
+        class="furniture-thumbnail"
+        onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+
+   <i class="fa-solid fa-window-maximize thumbnail-fallback"
+      aria-hidden="true"
+      style="display:none;"></i>
+</div>
+
+<span>Window 19</span>
+
+</div>
+<!-- window20 -->
+<div class="furniture-card"
+draggable="true"
+data-type="Window"
+data-model="models/construction/windows/window20.glb">
+
+<div class="card-image">
+   <img src="models/construction/window/window20.png"
+        alt="Window 20"
+        class="furniture-thumbnail"
+        onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+
+   <i class="fa-solid fa-window-maximize thumbnail-fallback"
+      aria-hidden="true"
+      style="display:none;"></i>
+</div>
+
+<span>Window 20</span>
+
+</div>
+    
+        <!-- Window 2-20 cards yahan isi structure mein add karein -->
+    
+    </div>
+    </div>
+    
+    <!-- =================================================
+         STAIRS
+    ================================================= -->
+    
+    <div class="subcategory-view" id="constructionStairsView">
+    <div class="subcategory-heading">
+        <button type="button" class="construction-back-button" onclick="closeConstructionCategory()"> 
+            <i class="fa-solid fa-arrow-left">
+            </i> <span>Back</span> 
+        </button>
+        <span>Stairs</span>
+    </div>
+    
+    <div class="furniture-grid">
+    
+        <div class="furniture-card"
+             draggable="true"
+             data-type="Stairs"
+             data-model="models/construction/stairs/stair1.glb">
+    
+            <div class="card-image">
+                <img src="models/construction/stairs/stair1.png"
+                     alt="Stairs 1"
+                     class="furniture-thumbnail"
+                     onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+    
+                <i class="fa-solid fa-stairs thumbnail-fallback"
+                   aria-hidden="true"
+                   style="display:none;"></i>
+            </div>
+    
+            <span>Stairs 1</span>
+    
+        </div>
+        <!-- stair2 -->
+        <div class="furniture-card"
+             draggable="true"
+             data-type="Stairs"
+             data-model="models/construction/stairs/stair2.glb">
+    
+            <div class="card-image">
+                <img src="models/construction/stairs/stair2.png"
+                     alt="Stairs 2"
+                     class="furniture-thumbnail"
+                     onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+    
+                <i class="fa-solid fa-stairs thumbnail-fallback"
+                   aria-hidden="true"
+                   style="display:none;"></i>
+            </div>
+    
+            <span>Stairs 2</span>
+    
+        </div>
+            <!-- stair3 -->
+            <div class="furniture-card"
+            draggable="true"
+            data-type="Stairs"
+            data-model="models/construction/stairs/stair3.glb">
+   
+           <div class="card-image">
+               <img src="models/construction/stairs/stair3.png"
+                    alt="Stairs 3"
+                    class="furniture-thumbnail"
+                    onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+   
+               <i class="fa-solid fa-stairs thumbnail-fallback"
+                  aria-hidden="true"
+                  style="display:none;"></i>
+           </div>
+   
+           <span>Stairs 3</span>
+   
+       </div>
+           <!-- stair4 -->
+           <div class="furniture-card"
+           draggable="true"
+           data-type="Stairs"
+           data-model="models/construction/stairs/stair4.glb">
+  
+          <div class="card-image">
+              <img src="models/construction/stairs/stair4.png"
+                   alt="Stairs 4"
+                   class="furniture-thumbnail"
+                   onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+  
+              <i class="fa-solid fa-stairs thumbnail-fallback"
+                 aria-hidden="true"
+                 style="display:none;"></i>
+          </div>
+  
+          <span>Stairs 4</span>
+  
+      </div>
+          <!-- stair5 -->
+          <div class="furniture-card"
+          draggable="true"
+          data-type="Stairs"
+          data-model="models/construction/stairs/stair5.glb">
+ 
+         <div class="card-image">
+             <img src="models/construction/stairs/stair5.png"
+                  alt="Stairs 5"
+                  class="furniture-thumbnail"
+                  onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+ 
+             <i class="fa-solid fa-stairs thumbnail-fallback"
+                aria-hidden="true"
+                style="display:none;"></i>
+         </div>
+ 
+         <span>Stairs 5</span>
+ 
+     </div>
+         <!-- stair6 -->
+         <div class="furniture-card"
+         draggable="true"
+         data-type="Stairs"
+         data-model="models/construction/stairs/stair6.glb">
+
+        <div class="card-image">
+            <img src="models/construction/stairs/stair6.png"
+                 alt="Stairs 2"
+                 class="furniture-thumbnail"
+                 onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+
+            <i class="fa-solid fa-stairs thumbnail-fallback"
+               aria-hidden="true"
+               style="display:none;"></i>
+        </div>
+
+        <span>Stairs 6</span>
+
+    </div>
+        <!-- stair7 -->
+        <div class="furniture-card"
+             draggable="true"
+             data-type="Stairs"
+             data-model="models/construction/stairs/stair7.glb">
+    
+            <div class="card-image">
+                <img src="models/construction/stairs/stair7.png"
+                     alt="Stairs 7"
+                     class="furniture-thumbnail"
+                     onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+    
+                <i class="fa-solid fa-stairs thumbnail-fallback"
+                   aria-hidden="true"
+                   style="display:none;"></i>
+            </div>
+    
+            <span>Stairs </span>
+    
+        </div>
+            <!-- stair8 -->
+            <div class="furniture-card"
+            draggable="true"
+            data-type="Stairs"
+            data-model="models/construction/stairs/stair8.glb">
+   
+           <div class="card-image">
+               <img src="models/construction/stairs/stair8.png"
+                    alt="Stairs 8"
+                    class="furniture-thumbnail"
+                    onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+   
+               <i class="fa-solid fa-stairs thumbnail-fallback"
+                  aria-hidden="true"
+                  style="display:none;"></i>
+           </div>
+   
+           <span>Stairs 8</span>
+   
+       </div>
+           <!-- stair9 -->
+           <div class="furniture-card"
+           draggable="true"
+           data-type="Stairs"
+           data-model="models/construction/stairs/stair9.glb">
+  
+          <div class="card-image">
+              <img src="models/construction/stairs/stair9.png"
+                   alt="Stairs 9"
+                   class="furniture-thumbnail"
+                   onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+  
+              <i class="fa-solid fa-stairs thumbnail-fallback"
+                 aria-hidden="true"
+                 style="display:none;"></i>
+          </div>
+  
+          <span>Stairs 9</span>
+  
+      </div>
+          <!-- stair10 -->
+          <div class="furniture-card"
+          draggable="true"
+          data-type="Stairs"
+          data-model="models/construction/stairs/stair10.glb">
+ 
+         <div class="card-image">
+             <img src="models/construction/stairs/stair10.png"
+                  alt="Stairs 10"
+                  class="furniture-thumbnail"
+                  onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+ 
+             <i class="fa-solid fa-stairs thumbnail-fallback"
+                aria-hidden="true"
+                style="display:none;"></i>
+         </div>
+ 
+         <span>Stairs 10</span>
+ 
+     </div>
+         <!-- stair11 -->
+         <div class="furniture-card"
+         draggable="true"
+         data-type="Stairs"
+         data-model="models/construction/stairs/stair11.glb">
+
+        <div class="card-image">
+            <img src="models/construction/stairs/stair11.png"
+                 alt="Stairs 11"
+                 class="furniture-thumbnail"
+                 onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+
+            <i class="fa-solid fa-stairs thumbnail-fallback"
+               aria-hidden="true"
+               style="display:none;"></i>
+        </div>
+
+        <span>Stairs 11</span>
+
+    </div>
+        <!-- stair12 -->
+        <div class="furniture-card"
+             draggable="true"
+             data-type="Stairs"
+             data-model="models/construction/stairs/stair12.glb">
+    
+            <div class="card-image">
+                <img src="models/construction/stairs/stair12.png"
+                     alt="Stairs 12"
+                     class="furniture-thumbnail"
+                     onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+    
+                <i class="fa-solid fa-stairs thumbnail-fallback"
+                   aria-hidden="true"
+                   style="display:none;"></i>
+            </div>
+    
+            <span>Stairs 12</span>
+    
+        </div>
+            <!-- stair13 -->
+            <div class="furniture-card"
+            draggable="true"
+            data-type="Stairs"
+            data-model="models/construction/stairs/stair13.glb">
+   
+           <div class="card-image">
+               <img src="models/construction/stairs/stair13.png"
+                    alt="Stairs 13"
+                    class="furniture-thumbnail"
+                    onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+   
+               <i class="fa-solid fa-stairs thumbnail-fallback"
+                  aria-hidden="true"
+                  style="display:none;"></i>
+           </div>
+   
+           <span>Stairs 13</span>
+   
+       </div>
+    
+        <!-- Stairs 2-20 cards yahan isi structure mein add karein -->
+    
+    </div>
+    </div>
+    
+    <!-- =================================================
+         ARCHS
+    ================================================= -->
+    
+    <div class="subcategory-view" id="constructionArchsView">
+    <div class="subcategory-heading">
+        <button type="button" class="construction-back-button" onclick="closeConstructionCategory()"> 
+            <i class="fa-solid fa-arrow-left">
+            </i> <span>Back</span> 
+        </button>
+        <span>Archs</span>
+    </div>
+    
+    <div class="furniture-grid">
+    
+        <div class="furniture-card"
+             draggable="true"
+             data-type="Arch"
+             data-model="models/construction/archs/arch1.glb">
+    
+            <div class="card-image">
+                <img src="models/construction/archs/arch1.png"
+                     alt="Arch 1"
+                     class="furniture-thumbnail"
+                     onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+    
+                <i class="fa-solid fa-archway thumbnail-fallback"
+                   aria-hidden="true"
+                   style="display:none;"></i>
+            </div>
+    
+            <span>Arch 1</span>
+    
+        </div>
+        <div class="furniture-card"
+        draggable="true"
+        data-type="Arch"
+        data-model="models/construction/archs/arch2.glb">
+
+       <div class="card-image">
+           <img src="models/construction/archs/arch2.png"
+                alt="Arch 2"
+                class="furniture-thumbnail"
+                onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+
+           <i class="fa-solid fa-archway thumbnail-fallback"
+              aria-hidden="true"
+              style="display:none;"></i>
+       </div>
+
+       <span>Arch 2</span>
+
+   </div>
+   <div class="furniture-card"
+   draggable="true"
+   data-type="Arch"
+   data-model="models/construction/archs/arch3.glb">
+
+  <div class="card-image">
+      <img src="models/construction/archs/arch3.png"
+           alt="Arch 1"
+           class="furniture-thumbnail"
+           onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+
+      <i class="fa-solid fa-archway thumbnail-fallback"
+         aria-hidden="true"
+         style="display:none;"></i>
+  </div>
+
+  <span>Arch 3</span>
+
+</div>
+<div class="furniture-card"
+draggable="true"
+data-type="Arch"
+data-model="models/construction/archs/arch4.glb">
+
+<div class="card-image">
+   <img src="models/construction/archs/arch4.png"
+        alt="Arch 4"
+        class="furniture-thumbnail"
+        onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+
+   <i class="fa-solid fa-archway thumbnail-fallback"
+      aria-hidden="true"
+      style="display:none;"></i>
+</div>
+
+<span>Arch 4</span>
+
+</div>
+<div class="furniture-card"
+draggable="true"
+data-type="Arch"
+data-model="models/construction/archs/arch5.glb">
+
+<div class="card-image">
+   <img src="models/construction/archs/arch5.png"
+        alt="Arch 5"
+        class="furniture-thumbnail"
+        onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+
+   <i class="fa-solid fa-archway thumbnail-fallback"
+      aria-hidden="true"
+      style="display:none;"></i>
+</div>
+
+<span>Arch 5</span>
+
+</div>
+<div class="furniture-card"
+draggable="true"
+data-type="Arch"
+data-model="models/construction/archs/arch6.glb">
+
+<div class="card-image">
+   <img src="models/construction/archs/arch6.png"
+        alt="Arch 6"
+        class="furniture-thumbnail"
+        onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+
+   <i class="fa-solid fa-archway thumbnail-fallback"
+      aria-hidden="true"
+      style="display:none;"></i>
+</div>
+
+<span>Arch 6</span>
+
+</div>
+        <!-- Arch 2-20 cards yahan isi structure mein add karein -->
+    
+    </div>
+    </div>
+    
+    <!-- =================================================
+         PARTITION
+    ================================================= -->
+    
+    <div class="subcategory-view" id="constructionPartitionView">
+    <div class="subcategory-heading">
+        <button type="button" class="construction-back-button" onclick="closeConstructionCategory()"> 
+            <i class="fa-solid fa-arrow-left">
+            </i> <span>Back</span> 
+        </button>
+        <span>Partition</span>
+    </div>
+    
+    <div class="furniture-grid">
+    
+        <div class="furniture-card"
+             draggable="true"
+             data-type="Partition"
+             data-model="models/construction/partition/partition1.glb">
+    
+            <div class="card-image">
+                <img src="models/construction/partition/partition1.png"
+                     alt="Partition 1"
+                     class="furniture-thumbnail"
+                     onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+    
+                <i class="fa-solid fa-table-columns thumbnail-fallback"
+                   aria-hidden="true"
+                   style="display:none;"></i>
+            </div>
+    
+            <span>Partition 1</span>
+    
+        </div>
+    
+        <!-- Partition 2-20 cards yahan isi structure mein add karein -->
+    
+    </div>
+    </div>
+    
+    <!-- =================================================
+         ROOFS
+    ================================================= -->
+    
+    <div class="subcategory-view" id="constructionRoofsView">
+    <div class="subcategory-heading">
+        <button type="button" class="construction-back-button" onclick="closeConstructionCategory()"> 
+            <i class="fa-solid fa-arrow-left">
+            </i> <span>Back</span> 
+        </button>
+        <span>Roofs</span>
+    </div>
+    
+    <div class="furniture-grid">
+    
+        <div class="furniture-card"
+             draggable="true"
+             data-type="Roof"
+             data-model="models/construction/roofs/roof1.glb">
+    
+            <div class="card-image">
+                <img src="models/construction/roofs/roof1.png"
+                     alt="Roof 1"
+                     class="furniture-thumbnail"
+                     onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+    
+                <i class="fa-solid fa-house thumbnail-fallback"
+                   aria-hidden="true"
+                   style="display:none;"></i>
+            </div>
+    
+            <span>Roof 1</span>
+    
+        </div>
+    
+        <!-- Roof 2-20 cards yahan isi structure mein add karein -->
+    
+    </div>
+    </div>
+    
+    <!-- =================================================
+         FIREPLACE
+    ================================================= -->
+    
+    <div class="subcategory-view" id="constructionFireplaceView">
+    <div class="subcategory-heading">
+        <button type="button" class="construction-back-button" onclick="closeConstructionCategory()"> 
+            <i class="fa-solid fa-arrow-left">
+            </i> <span>Back</span> 
+        </button>
+        <span>Fireplace</span>
+    </div>
+    
+    <div class="furniture-grid">
+    
+        <div class="furniture-card"
+             draggable="true"
+             data-type="Fireplace"
+             data-model="models/construction/fireplace/fire1.glb">
+    
+            <div class="card-image">
+                <img src="models/construction/fireplace/fire1.png"
+                     alt="Fireplace 1"
+                     class="furniture-thumbnail"
+                     onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+    
+                <i class="fa-solid fa-fire thumbnail-fallback"
+                   aria-hidden="true"
+                   style="display:none;"></i>
+            </div>
+    
+            <span>Fireplace 1</span>
+    
+        </div>
+        <div class="furniture-card"
+        draggable="true"
+        data-type="Fireplace"
+        data-model="models/construction/fireplace/fire2.glb">
+
+       <div class="card-image">
+           <img src="models/construction/fireplace/fire2.png"
+                alt="Fireplace 1"
+                class="furniture-thumbnail"
+                onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+
+           <i class="fa-solid fa-fire thumbnail-fallback"
+              aria-hidden="true"
+              style="display:none;"></i>
+       </div>
+
+       <span>Fireplace 2</span>
+
+   </div>
+   <div class="furniture-card"
+   draggable="true"
+   data-type="Fireplace"
+   data-model="models/construction/fireplace/fire3.glb">
+
+  <div class="card-image">
+      <img src="models/construction/fireplace/fire3.png"
+           alt="Fireplace 1"
+           class="furniture-thumbnail"
+           onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+
+      <i class="fa-solid fa-fire thumbnail-fallback"
+         aria-hidden="true"
+         style="display:none;"></i>
+  </div>
+
+  <span>Fireplace 3</span>
+
+</div>
+<div class="furniture-card"
+draggable="true"
+data-type="Fireplace"
+data-model="models/construction/fireplace/fire4.glb">
+
+<div class="card-image">
+   <img src="models/construction/fireplace/fire4.png"
+        alt="Fireplace 1"
+        class="furniture-thumbnail"
+        onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+
+   <i class="fa-solid fa-fire thumbnail-fallback"
+      aria-hidden="true"
+      style="display:none;"></i>
+</div>
+
+<span>Fireplace 4</span>
+
+</div>
+<div class="furniture-card"
+draggable="true"
+data-type="Fireplace"
+data-model="models/construction/fireplace/fire5.glb">
+
+<div class="card-image">
+   <img src="models/construction/fireplace/fire5.png"
+        alt="Fireplace 1"
+        class="furniture-thumbnail"
+        onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+
+   <i class="fa-solid fa-fire thumbnail-fallback"
+      aria-hidden="true"
+      style="display:none;"></i>
+</div>
+
+<span>Fireplace 5</span>
+
+</div>
+<div class="furniture-card"
+draggable="true"
+data-type="Fireplace"
+data-model="models/construction/fireplace/fire6.glb">
+
+<div class="card-image">
+   <img src="models/construction/fireplace/fire6.png"
+        alt="Fireplace 1"
+        class="furniture-thumbnail"
+        onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+
+   <i class="fa-solid fa-fire thumbnail-fallback"
+      aria-hidden="true"
+      style="display:none;"></i>
+</div>
+
+<span>Fireplace 6</span>
+
+</div>
+<div class="furniture-card"
+draggable="true"
+data-type="Fireplace"
+data-model="models/construction/fireplace/fire7.glb">
+
+<div class="card-image">
+   <img src="models/construction/fireplace/fire7.png"
+        alt="Fireplace 1"
+        class="furniture-thumbnail"
+        onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+
+   <i class="fa-solid fa-fire thumbnail-fallback"
+      aria-hidden="true"
+      style="display:none;"></i>
+</div>
+
+<span>Fireplace 7</span>
+
+</div>
+<div class="furniture-card"
+draggable="true"
+data-type="Fireplace"
+data-model="models/construction/fireplace/fire8.glb">
+
+<div class="card-image">
+   <img src="models/construction/fireplace/fire8.png"
+        alt="Fireplace 8"
+        class="furniture-thumbnail"
+        onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+
+   <i class="fa-solid fa-fire thumbnail-fallback"
+      aria-hidden="true"
+      style="display:none;"></i>
+</div>
+
+<span>Fireplace 8</span>
+
+</div>
+<div class="furniture-card"
+draggable="true"
+data-type="Fireplace"
+data-model="models/construction/fireplace/fire9.glb">
+
+<div class="card-image">
+   <img src="models/construction/fireplace/fire9.png"
+        alt="Fireplace 9"
+        class="furniture-thumbnail"
+        onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+
+   <i class="fa-solid fa-fire thumbnail-fallback"
+      aria-hidden="true"
+      style="display:none;"></i>
+</div>
+
+<span>Fireplace 9</span>
+
+</div>
+<div class="furniture-card"
+draggable="true"
+data-type="Fireplace"
+data-model="models/construction/fireplace/fire10.glb">
+
+<div class="card-image">
+   <img src="models/construction/fireplace/fire10.png"
+        alt="Fireplace 1"
+        class="furniture-thumbnail"
+        onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+
+   <i class="fa-solid fa-fire thumbnail-fallback"
+      aria-hidden="true"
+      style="display:none;"></i>
+</div>
+
+<span>Fireplace 10</span>
+
+</div>
+<div class="furniture-card"
+draggable="true"
+data-type="Fireplace"
+data-model="models/construction/fireplace/fire11.glb">
+
+<div class="card-image">
+   <img src="models/construction/fireplace/fire11.png"
+        alt="Fireplace 1"
+        class="furniture-thumbnail"
+        onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+
+   <i class="fa-solid fa-fire thumbnail-fallback"
+      aria-hidden="true"
+      style="display:none;"></i>
+</div>
+
+<span>Fireplace 11</span>
+
+</div>
+<div class="furniture-card"
+draggable="true"
+data-type="Fireplace"
+data-model="models/construction/fireplace/fire12.glb">
+
+<div class="card-image">
+   <img src="models/construction/fireplace/fire12.png"
+        alt="Fireplace 12"
+        class="furniture-thumbnail"
+        onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+
+   <i class="fa-solid fa-fire thumbnail-fallback"
+      aria-hidden="true"
+      style="display:none;"></i>
+</div>
+
+<span>Fireplace 12</span>
+
+</div>
+<div class="furniture-card"
+draggable="true"
+data-type="Fireplace"
+data-model="models/construction/fireplace/fire13.glb">
+
+<div class="card-image">
+   <img src="models/construction/fireplace/fire13.png"
+        alt="Fireplace 1"
+        class="furniture-thumbnail"
+        onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+
+   <i class="fa-solid fa-fire thumbnail-fallback"
+      aria-hidden="true"
+      style="display:none;"></i>
+</div>
+
+<span>Fireplace 13</span>
+
+</div>
+<div class="furniture-card"
+draggable="true"
+data-type="Fireplace"
+data-model="models/construction/fireplace/fire14.glb">
+
+<div class="card-image">
+   <img src="models/construction/fireplace/fire14.png"
+        alt="Fireplace 14"
+        class="furniture-thumbnail"
+        onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+
+   <i class="fa-solid fa-fire thumbnail-fallback"
+      aria-hidden="true"
+      style="display:none;"></i>
+</div>
+
+<span>Fireplace 14</span>
+
+</div>
+<div class="furniture-card"
+draggable="true"
+data-type="Fireplace"
+data-model="models/construction/fireplace/fire15.glb">
+
+<div class="card-image">
+   <img src="models/construction/fireplace/fire15.png"
+        alt="Fireplace 1"
+        class="furniture-thumbnail"
+        onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+
+   <i class="fa-solid fa-fire thumbnail-fallback"
+      aria-hidden="true"
+      style="display:none;"></i>
+</div>
+
+<span>Fireplace 15</span>
+
+</div>
+<div class="furniture-card"
+draggable="true"
+data-type="Fireplace"
+data-model="models/construction/fireplace/fire16.glb">
+
+<div class="card-image">
+   <img src="models/construction/fireplace/fire16.png"
+        alt="Fireplace 1"
+        class="furniture-thumbnail"
+        onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+
+   <i class="fa-solid fa-fire thumbnail-fallback"
+      aria-hidden="true"
+      style="display:none;"></i>
+</div>
+
+<span>Fireplace 16</span>
+
+</div>
+<div class="furniture-card"
+draggable="true"
+data-type="Fireplace"
+data-model="models/construction/fireplace/fire17.glb">
+
+<div class="card-image">
+   <img src="models/construction/fireplace/fire17.png"
+        alt="Fireplace 1"
+        class="furniture-thumbnail"
+        onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+
+   <i class="fa-solid fa-fire thumbnail-fallback"
+      aria-hidden="true"
+      style="display:none;"></i>
+</div>
+
+<span>Fireplace 17</span>
+
+</div>
+<div class="furniture-card"
+draggable="true"
+data-type="Fireplace"
+data-model="models/construction/fireplace/fire18.glb">
+
+<div class="card-image">
+   <img src="models/construction/fireplace/fire18.png"
+        alt="Fireplace 1"
+        class="furniture-thumbnail"
+        onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+
+   <i class="fa-solid fa-fire thumbnail-fallback"
+      aria-hidden="true"
+      style="display:none;"></i>
+</div>
+
+<span>Fireplace 18</span>
+
+</div>
+<div class="furniture-card"
+draggable="true"
+data-type="Fireplace"
+data-model="models/construction/fireplace/fire19.glb">
+
+<div class="card-image">
+   <img src="models/construction/fireplace/fire19.png"
+        alt="Fireplace 1"
+        class="furniture-thumbnail"
+        onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+
+   <i class="fa-solid fa-fire thumbnail-fallback"
+      aria-hidden="true"
+      style="display:none;"></i>
+</div>
+
+<span>Fireplace 19</span>
+
+</div>
+<div class="furniture-card"
+draggable="true"
+data-type="Fireplace"
+data-model="models/construction/fireplace/fire20.glb">
+
+<div class="card-image">
+   <img src="models/construction/fireplace/fire20.png"
+        alt="Fireplace 20"
+        class="furniture-thumbnail"
+        onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+
+   <i class="fa-solid fa-fire thumbnail-fallback"
+      aria-hidden="true"
+      style="display:none;"></i>
+</div>
+
+<span>Fireplace 20</span>
+
+</div>
+        <!-- Fireplace 2-20 cards yahan isi structure mein add karein -->
+    
+    </div>
+    </div>
+    
+    <!-- =================================================
+         COLUMN
+    ================================================= -->
+    
+    <div class="subcategory-view" id="constructionColumnView">
+    <div class="subcategory-heading">
+        <button type="button" class="construction-back-button" onclick="closeConstructionCategory()"> 
+            <i class="fa-solid fa-arrow-left">
+            </i> <span>Back</span> 
+        </button>
+        <span>Column</span>
+    </div>
+    
+    <div class="furniture-grid">
+    
+        <div class="furniture-card"
+             draggable="true"
+             data-type="Column"
+             data-model="models/construction/column/column3.glb">
+    
+            <div class="card-image">
+                <img src="models/construction/column/column3.png"
+                     alt="Column 1"
+                     class="furniture-thumbnail"
+                     onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+    
+                <i class="fa-solid fa-building-columns thumbnail-fallback"
+                   aria-hidden="true"
+                   style="display:none;"></i>
+            </div>
+    
+            <span>Column 1</span>
+    
+        </div>
+        <div class="furniture-card"
+        draggable="true"
+        data-type="Column"
+        data-model="models/construction/column/column4.glb">
+
+       <div class="card-image">
+           <img src="models/construction/column/column4.png"
+                alt="Column 1"
+                class="furniture-thumbnail"
+                onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+
+           <i class="fa-solid fa-building-columns thumbnail-fallback"
+              aria-hidden="true"
+              style="display:none;"></i>
+       </div>
+
+       <span>Column 2</span>
+
+   </div>
+   <div class="furniture-card"
+   draggable="true"
+   data-type="Column"
+   data-model="models/construction/column/column5.glb">
+
+  <div class="card-image">
+      <img src="models/construction/column/column5.png"
+           alt="Column 1"
+           class="furniture-thumbnail"
+           onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+
+      <i class="fa-solid fa-building-columns thumbnail-fallback"
+         aria-hidden="true"
+         style="display:none;"></i>
+  </div>
+
+  <span>Column 3</span>
+
+</div>
+<div class="furniture-card"
+draggable="true"
+data-type="Column"
+data-model="models/construction/column/column6.glb">
+
+<div class="card-image">
+   <img src="models/construction/column/column6.png"
+        alt="Column 1"
+        class="furniture-thumbnail"
+        onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+
+   <i class="fa-solid fa-building-columns thumbnail-fallback"
+      aria-hidden="true"
+      style="display:none;"></i>
+</div>
+
+<span>Column 4</span>
+
+</div>
+<div class="furniture-card"
+draggable="true"
+data-type="Column"
+data-model="models/construction/column/column7.glb">
+
+<div class="card-image">
+   <img src="models/construction/column/column7.png"
+        alt="Column 1"
+        class="furniture-thumbnail"
+        onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+
+   <i class="fa-solid fa-building-columns thumbnail-fallback"
+      aria-hidden="true"
+      style="display:none;"></i>
+</div>
+
+<span>Column 5</span>
+
+</div>
+<div class="furniture-card"
+draggable="true"
+data-type="Column"
+data-model="models/construction/column/column8.glb">
+
+<div class="card-image">
+   <img src="models/construction/column/column8.png"
+        alt="Column 8"
+        class="furniture-thumbnail"
+        onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+
+   <i class="fa-solid fa-building-columns thumbnail-fallback"
+      aria-hidden="true"
+      style="display:none;"></i>
+</div>
+
+<span>Column 6</span>
+
+</div>
+<div class="furniture-card"
+draggable="true"
+data-type="Column"
+data-model="models/construction/column/column9.glb">
+
+<div class="card-image">
+   <img src="models/construction/column/column9.png"
+        alt="Column 9"
+        class="furniture-thumbnail"
+        onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+
+   <i class="fa-solid fa-building-columns thumbnail-fallback"
+      aria-hidden="true"
+      style="display:none;"></i>
+</div>
+
+<span>Column 7</span>
+
+</div>
+<div class="furniture-card"
+draggable="true"
+data-type="Column"
+data-model="models/construction/column/column10.glb">
+
+<div class="card-image">
+   <img src="models/construction/column/column10.png"
+        alt="Column 8"
+        class="furniture-thumbnail"
+        onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+
+   <i class="fa-solid fa-building-columns thumbnail-fallback"
+      aria-hidden="true"
+      style="display:none;"></i>
+</div>
+
+<span>Column 8</span>
+
+</div>
+    
+        <!-- Column 2-20 cards yahan isi structure mein add karein -->
+    
+    </div>
+    </div>
+    
+    <!-- =================================================
+         TERRACE
+    ================================================= -->
+    
+    <div class="subcategory-view" id="constructionTerraceView">
+    <div class="subcategory-heading">
+        <button type="button" class="construction-back-button" onclick="closeConstructionCategory()"> 
+            <i class="fa-solid fa-arrow-left">
+            </i> <span>Back</span> 
+        </button>
+        <span>Terrace</span>
+    </div>
+    
+    <div class="furniture-grid">
+    
+        <div class="furniture-card"
+             draggable="true"
+             data-type="Terrace"
+             data-model="models/construction/terrace/terrace1.glb">
+    
+            <div class="card-image">
+                <img src="models/construction/terrace/terrace1.png"
+                     alt="Terrace 1"
+                     class="furniture-thumbnail"
+                     onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+    
+                <i class="fa-solid fa-umbrella-beach thumbnail-fallback"
+                   aria-hidden="true"
+                   style="display:none;"></i>
+            </div>
+    
+            <span>Terrace 1</span>
+    
+        </div>
+    
+        <!-- Terrace 2-20 cards yahan isi structure mein add karein -->
+    
+    </div>
+    </div>
+    
+    <!-- =================================================
+         FENCES & GATES
+    ================================================= -->
+    
+    <div class="subcategory-view" id="constructionFencesView">
+    <div class="subcategory-heading">
+        <button type="button" class="construction-back-button" onclick="closeConstructionCategory()"> 
+            <i class="fa-solid fa-arrow-left">
+            </i> <span>Back</span> 
+        </button>
+        <span>Fences &amp; Gates</span>
+    </div>
+    
+    <div class="furniture-grid">
+    
+        <div class="furniture-card"
+             draggable="true"
+             data-type="Fence"
+             data-model="models/construction/fences/fence1.glb">
+    
+            <div class="card-image">
+                <img src="models/construction/fences/fence1.png"
+                     alt="Fence 1"
+                     class="furniture-thumbnail"
+                     onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+    
+                <i class="fa-solid fa-fence thumbnail-fallback"
+                   aria-hidden="true"
+                   style="display:none;"></i>
+            </div>
+    
+            <span>Fence 1</span>
+    
+        </div>
+    
+        <!-- Fence 2-20 cards yahan isi structure mein add karein -->
+    
+    </div>
+   
+    
+    </div>
+    
+        </div>
+
+
+        <!-- =================================================
+             FURNITURE PANEL
+        ================================================== -->
+
+        <div class="side-panel" id="furniturePanel">
+
+
+            <!-- FURNITURE HEADER -->
+
+            <div class="furniture-panel-header">
+
+                <button class="panel-back" id="furnitureBackBtn" title="Back">
+                    <i class="fa-solid fa-arrow-left"></i>
+                </button>
+
+                <h4>Furniture</h4>
+
+            </div>
+
+
+            <!-- =================================================
+                 MAIN FURNITURE CATEGORY VIEW
+            ================================================== -->
+
+            <div class="furniture-category-view" id="categoryView">
+       <!-- =================================================
+                         CATEGORIES VIEW (shown by default, Rooms removed)
+                    ================================================== -->
+
+                    <div id="categories" class="tab-content" style="display: block;">
+
+                        <!-- CATEGORY TITLE -->
+                        <div class="category-title">
+                            <span>Furniture</span>
+                            <!-- <i class="fa-solid fa-chevron-up"></i> -->
+                        </div>
+
+                        <!-- =================================================
+                             FURNITURE LIST
+                        ================================================== -->
+
+                        <div class="furniture-list">
+
+                            <!-- ARMCHAIRS -->
+                            <div class="furniture-item furniture-category" data-category="Armchairs">
+                                <div class="furniture-image">
+                                    <i class="fa-solid fa-chair"></i>
+                                </div>
+                                <span>Armchairs</span>
+                                <!-- <i class="fa-solid fa-chevron-right category-arrow"></i> -->
+                            </div>
+
+                            <!-- SOFAS -->
+                            <div class="furniture-item furniture-category" data-category="Sofa">
+                                <div class="furniture-image">
+                                    <i class="fa-solid fa-couch"></i>
+                                </div>
+                                <span>Sofas</span>
+                                <!-- <i class="fa-solid fa-chevron-right category-arrow"></i> -->
+                            </div>
+
+                            <!-- OTTOMAN -->
+                            <div class="furniture-item" draggable="true" data-type="Ottoman">
+                                <div class="furniture-image">
+                                    <i class="fa-solid fa-cube"></i>
+                                </div>
+                                <span>Ottoman</span>
+                            </div>
+
+                            <!-- BED -->
+                            <div class="furniture-item" draggable="true" data-type="Bed">
+                                <div class="furniture-image">
+                                    <i class="fa-solid fa-bed"></i>
+                                </div>
+                                <span>Beds</span>
+                            </div>
+
+                            <!-- STORAGE -->
+                            <div class="furniture-item" draggable="true" data-type="Storage">
+                                <div class="furniture-image">
+                                    <i class="fa-solid fa-box"></i>
+                                </div>
+                                <span>Storage</span>
+                            </div>
+
+                            <!-- TABLE -->
+                            <div class="furniture-item" draggable="true" data-type="Table">
+                                <div class="furniture-image">
+                                    <i class="fa-solid fa-table"></i>
+                                </div>
+                                <span>Tables, chairs</span>
+                            </div>
+
+                            <!-- OFFICE -->
+                            <div class="furniture-item" draggable="true" data-type="Office Desk">
+                                <div class="furniture-image">
+                                    <i class="fa-solid fa-desktop"></i>
+                                </div>
+                                <span>Office furniture</span>
+                            </div>
+
+                            <!-- CHILDREN -->
+                            <div class="furniture-item" draggable="true" data-type="Children Furniture">
+                                <div class="furniture-image">
+                                    <i class="fa-solid fa-child"></i>
+                                </div>
+                                <span>Children's furniture</span>
+                            </div>
+
+                            <!-- KITCHEN -->
+                            <div class="furniture-item" draggable="true" data-type="Kitchen">
+                                <div class="furniture-image">
+                                    <i class="fa-solid fa-kitchen-set"></i>
+                                </div>
+                                <span>Kitchen</span>
+                            </div>
+
+                            <!-- BATHROOM -->
+                            <div class="furniture-item" draggable="true" data-type="Bathroom">
+                                <div class="furniture-image">
+                                    <i class="fa-solid fa-bath"></i>
+                                </div>
+                                <span>Bathroom</span>
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                <!-- =====================================================
+                     CATEGORIES VIEW
+                ====================================================== -->
+            
+                <div id="categories" class="tab-content" style="display: none;">
+            
+            
+                    <!-- CATEGORY TITLE -->
+            
+                    <div class="category-title">
+            
+                        <span>
+                            Furniture
+                        </span>
+            
+                        <i class="fa-solid fa-chevron-up"></i>
+            
+                    </div>
+            
+            
+                    <!-- =================================================
+                         FURNITURE LIST
+                    ================================================== -->
+            
+                    <div class="furniture-list">
+            
+            
+                        <!-- ARMCHAIRS -->
+            
+                        <div
+                            class="furniture-item furniture-category"
+                            data-category="Armchairs">
+            
+                            <div class="furniture-image">
+            
+                                <i class="fa-solid fa-chair"></i>
+            
+                            </div>
+            
+                            <span>
+                                Armchairs
+                            </span>
+            
+                            <i class="fa-solid fa-chevron-right category-arrow"></i>
+            
+                        </div>
+            
+            
+                        <!-- SOFAS -->
+            
+                        <div
+                            class="furniture-item furniture-category"
+                            data-category="Sofa">
+            
+                            <div class="furniture-image">
+            
+                                <i class="fa-solid fa-couch"></i>
+            
+                            </div>
+            
+                            <span>
+                                Sofas
+                            </span>
+            
+                            <i class="fa-solid fa-chevron-right category-arrow"></i>
+            
+                        </div>
+            
+            
+                        <!-- OTTOMAN -->
+            
+                        <div
+                            class="furniture-item"
+                            draggable="true"
+                            data-type="Ottoman">
+            
+                            <div class="furniture-image">
+            
+                                <i class="fa-solid fa-cube"></i>
+            
+                            </div>
+            
+                            <span>
+                                Ottoman
+                            </span>
+            
+                        </div>
+            
+            
+                        <!-- BED -->
+            
+                        <div
+                            class="furniture-item"
+                            draggable="true"
+                            data-type="Bed">
+            
+                            <div class="furniture-image">
+            
+                                <i class="fa-solid fa-bed"></i>
+            
+                            </div>
+            
+                            <span>
+                                Beds
+                            </span>
+            
+                        </div>
+            
+            
+                        <!-- STORAGE -->
+            
+                        <div
+                            class="furniture-item"
+                            draggable="true"
+                            data-type="Storage">
+            
+                            <div class="furniture-image">
+            
+                                <i class="fa-solid fa-box"></i>
+            
+                            </div>
+            
+                            <span>
+                                Storage
+                            </span>
+            
+                        </div>
+            
+            
+                        <!-- TABLE -->
+            
+                        <div
+                            class="furniture-item"
+                            draggable="true"
+                            data-type="Table">
+            
+                            <div class="furniture-image">
+            
+                                <i class="fa-solid fa-table"></i>
+            
+                            </div>
+            
+                            <span>
+                                Tables, chairs
+                            </span>
+            
+                        </div>
+            
+            
+                        <!-- OFFICE -->
+            
+                        <div
+                            class="furniture-item"
+                            draggable="true"
+                            data-type="Office Desk">
+            
+                            <div class="furniture-image">
+            
+                                <i class="fa-solid fa-desktop"></i>
+            
+                            </div>
+            
+                            <span>
+                                Office furniture
+                            </span>
+            
+                        </div>
+            
+            
+                        <!-- CHILDREN -->
+            
+                        <div
+                            class="furniture-item"
+                            draggable="true"
+                            data-type="Children Furniture">
+            
+                            <div class="furniture-image">
+            
+                                <i class="fa-solid fa-child"></i>
+            
+                            </div>
+            
+                            <span>
+                                Children's furniture
+                            </span>
+            
+                        </div>
+            
+            
+                        <!-- KITCHEN -->
+            
+                        <div
+                            class="furniture-item"
+                            draggable="true"
+                            data-type="Kitchen">
+            
+                            <div class="furniture-image">
+            
+                                <i class="fa-solid fa-kitchen-set"></i>
+            
+                            </div>
+            
+                            <span>
+                                Kitchen
+                            </span>
+            
+                        </div>
+            
+            
+                        <!-- BATHROOM -->
+            
+                        <div
+                            class="furniture-item"
+                            draggable="true"
+                            data-type="Bathroom">
+            
+                            <div class="furniture-image">
+            
+                                <i class="fa-solid fa-bath"></i>
+            
+                            </div>
+            
+                            <span>
+                                Bathroom
+                            </span>
+            
+                        </div>
+            
+            
+                    </div>
+            
+                </div>
+            
+            </div>
+            <!-- =================================================
+                 ARMCHAIRS
+            ================================================== -->
+
+            <div
+                class="subcategory-view"
+                id="armchairsView">
+
+
+                <div class="subcategory-heading">
+
+                    <span>
+                        Armchairs
+                    </span>
+
+                </div>
+
+
+                <div class="furniture-grid">
+
+
+                    <!-- ARMCHAIR 1 -->
+
+                    <div
+                        class="furniture-card"
+                        draggable="true"
+                        data-type="Armchair"
+                        data-model="models/armchair1.glb">
+
+                        <div class="card-image">
+
+                            <img
+                                src="models/armchair1.png"
+                                alt="Armchair 1"
+                                class="furniture-thumbnail"
+                                onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+
+                            <i
+                                class="fa-solid fa-chair thumbnail-fallback"
+                                style="display:none;">
+                            </i>
+
+                        </div>
+
+                        <div class="card-name">
+                            Armchair 1
+                        </div>
+
+                    </div>
+
+
+                    <!-- ARMCHAIR 2 -->
+
+                    <div
+                        class="furniture-card"
+                        draggable="true"
+                        data-type="Armchair"
+                        data-model="models/armchair2.glb">
+
+                        <div class="card-image">
+
+                            <img
+                                src="models/armchair2.png"
+                                alt="Armchair 2"
+                                class="furniture-thumbnail"
+                                onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+
+                            <i
+                                class="fa-solid fa-chair thumbnail-fallback"
+                                style="display:none;">
+                            </i>
+
+                        </div>
+
+                        <div class="card-name">
+                            Armchair 2
+                        </div>
+
+                    </div>
+
+
+                    <!-- ARMCHAIR 3 -->
+
+                    <div
+                        class="furniture-card"
+                        draggable="true"
+                        data-type="Armchair"
+                        data-model="models/armchair3.glb">
+
+                        <div class="card-image">
+
+                            <img
+                                src="models/armchair3.png"
+                                alt="Armchair 3"
+                                class="furniture-thumbnail"
+                                onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+
+                            <i
+                                class="fa-solid fa-chair thumbnail-fallback"
+                                style="display:none;">
+                            </i>
+
+                        </div>
+
+                        <div class="card-name">
+                            Armchair 3
+                        </div>
+
+                    </div>
+                           <!-- ARMCHAIR 4 -->
+
+                           <div
+                           class="furniture-card"
+                           draggable="true"
+                           data-type="Armchair"
+                           data-model="models/armchair4.glb">
+   
+                           <div class="card-image">
+   
+                               <img
+                                   src="models/armchair4.png"
+                                   alt="Armchair 4"
+                                   class="furniture-thumbnail"
+                                   onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+   
+                               <i
+                                   class="fa-solid fa-chair thumbnail-fallback"
+                                   style="display:none;">
+                               </i>
+   
+                           </div>
+   
+                           <div class="card-name">
+                               Armchair 4
+                           </div>
+   
+                       </div>
+       <!-- ARMCHAIR 5 -->
+
+       <div
+       class="furniture-card"
+       draggable="true"
+       data-type="Armchair"
+       data-model="models/armchair5.glb">
+
+       <div class="card-image">
+
+           <img
+               src="models/armchair5.png"
+               alt="Armchair 5"
+               class="furniture-thumbnail"
+               onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+
+           <i
+               class="fa-solid fa-chair thumbnail-fallback"
+               style="display:none;">
+           </i>
+
+       </div>
+
+       <div class="card-name">
+           Armchair 5
+       </div>
+
+   </div>
+       <!-- ARMCHAIR 6 -->
+
+       <div
+       class="furniture-card"
+       draggable="true"
+       data-type="Armchair"
+       data-model="models/armchair6.glb">
+
+       <div class="card-image">
+
+           <img
+               src="models/armchair6.png"
+               alt="Armchair 6"
+               class="furniture-thumbnail"
+               onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+
+           <i
+               class="fa-solid fa-chair thumbnail-fallback"
+               style="display:none;">
+           </i>
+
+       </div>
+
+       <div class="card-name">
+           Armchair 6
+       </div>
+
+   </div>
+   <!-- armchair7 -->
+   <div class="furniture-card" draggable="true" data-type="Armchair" data-model="models/armchair7.glb">
+   <div class="card-image">
+   <img src="models/armchair7.png" alt="Armchair 7" class="furniture-thumbnail" 
+   onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+   <i class="fa-solid fa-chair thumbnail-fallback" style="display:none;"></i>
+  </div>
+  <div class="card-name"> Armchair 7 </div>
+   </div>
+ <!-- armchair8 -->
+ <div class="furniture-card" draggable="true" data-type="Armchair" data-model="models/armchair8.glb">
+    <div class="card-image">
+    <img src="models/armchair8.png" alt="Armchair 8" class="furniture-thumbnail" 
+    onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+    <i class="fa-solid fa-chair thumbnail-fallback" style="display:none;"></i>
+   </div>
+   <div class="card-name"> Armchair 8 </div>
+    </div>
+     <!-- armchair9 -->
+   <div class="furniture-card" draggable="true" data-type="Armchair" data-model="models/armchair9.glb">
+    <div class="card-image">
+    <img src="models/armchair9.png" alt="Armchair 9" class="furniture-thumbnail" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+    <i class="fa-solid fa-chair thumbnail-fallback" style="display:none;"></i>
+   </div>
+   <div class="card-name"> Armchair 9</div>
+
+    </div>
+     <!-- ARMCHAIR 10 -->
+     <div
+     class="furniture-card"
+     draggable="true"
+     data-type="Armchair"
+     data-model="models/armchair10.glb">
+
+     <div class="card-image">
+
+         <img
+             src="models/armchair10.png"
+             alt="Armchair 10"
+             class="furniture-thumbnail"
+             onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+
+         <i
+             class="fa-solid fa-chair thumbnail-fallback"
+             style="display:none;">
+         </i>
+
+     </div>
+
+     <div class="card-name">
+         Armchair 10
+     </div>
+
+ </div>
+  <!-- ARMCHAIR 11 -->
+
+  <div
+  class="furniture-card"
+  draggable="true"
+  data-type="Armchair"
+  data-model="models/armchair11.glb">
+
+  <div class="card-image">
+
+      <img
+          src="models/armchair11.png"
+          alt="Armchair 11"
+          class="furniture-thumbnail"
+          onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+
+      <i
+          class="fa-solid fa-chair thumbnail-fallback"
+          style="display:none;">
+      </i>
+
+  </div>
+
+  <div class="card-name">
+      Armchair 11
+  </div>
+
+</div>
+ <!-- ARMCHAIR 12 -->
+
+ <div
+ class="furniture-card"
+ draggable="true"
+ data-type="Armchair"
+ data-model="models/armchair12.glb">
+
+ <div class="card-image">
+
+     <img
+         src="models/armchair12.png"
+         alt="Armchair 12"
+         class="furniture-thumbnail"
+         onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+
+     <i
+         class="fa-solid fa-chair thumbnail-fallback"
+         style="display:none;">
+     </i>
+
+ </div>
+
+ <div class="card-name">
+     Armchair 12
+ </div>
+
+</div>
+ <!-- ARMCHAIR 13 -->
+
+ <div
+ class="furniture-card"
+ draggable="true"
+ data-type="Armchair"
+ data-model="models/armchair13.glb">
+
+ <div class="card-image">
+
+     <img
+         src="models/armchair13.png"
+         alt="Armchair 13"
+         class="furniture-thumbnail"
+         onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+
+     <i
+         class="fa-solid fa-chair thumbnail-fallback"
+         style="display:none;">
+     </i>
+
+ </div>
+
+ <div class="card-name">
+     Armchair 13
+ </div>
+
+</div>
+ <!-- ARMCHAIR 14-->
+
+ <div
+ class="furniture-card"
+ draggable="true"
+ data-type="Armchair"
+ data-model="models/armchair14.glb">
+
+ <div class="card-image">
+
+     <img
+         src="models/armchair14.png"
+         alt="Armchair 14"
+         class="furniture-thumbnail"
+         onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+
+     <i
+         class="fa-solid fa-chair thumbnail-fallback"
+         style="display:none;">
+     </i>
+
+ </div>
+
+ <div class="card-name">
+     Armchair 14
+ </div>
+
+</div>
+ <!-- ARMCHAIR 15-->
+
+ <div
+ class="furniture-card"
+ draggable="true"
+ data-type="Armchair"
+ data-model="models/armchair15.glb">
+
+ <div class="card-image">
+
+     <img
+         src="models/armchair15.png"
+         alt="Armchair 15"
+         class="furniture-thumbnail"
+         onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+
+     <i
+         class="fa-solid fa-chair thumbnail-fallback"
+         style="display:none;">
+     </i>
+
+ </div>
+
+ <div class="card-name">
+     Armchair 15
+ </div>
+
+</div>
+ <!-- ARMCHAIR 16 -->
+
+ <div
+ class="furniture-card"
+ draggable="true"
+ data-type="Armchair"
+ data-model="models/armchair19.glb">
+
+ <div class="card-image">
+
+     <img
+         src="models/armchair16.png"
+         alt="Armchair 16"
+         class="furniture-thumbnail"
+         onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+
+     <i
+         class="fa-solid fa-chair thumbnail-fallback"
+         style="display:none;">
+     </i>
+
+ </div>
+
+ <div class="card-name">
+     Armchair 16
+ </div>
+
+</div>
+ <!-- ARMCHAIR 17 -->
+
+ <div
+ class="furniture-card"
+ draggable="true"
+ data-type="Armchair"
+ data-model="models/armchair17.glb">
+
+ <div class="card-image">
+
+     <img
+         src="models/armchair17.png"
+         alt="Armchair 17"
+         class="furniture-thumbnail"
+         onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+
+     <i
+         class="fa-solid fa-chair thumbnail-fallback"
+         style="display:none;">
+     </i>
+
+ </div>
+
+ <div class="card-name">
+     Armchair 17
+ </div>
+
+</div>
+ <!-- ARMCHAIR 18-->
+
+ <div
+ class="furniture-card"
+ draggable="true"
+ data-type="Armchair"
+ data-model="models/armchair18.glb">
+
+ <div class="card-image">
+
+     <img
+         src="models/armchair18.png"
+         alt="Armchair 18"
+         class="furniture-thumbnail"
+         onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+
+     <i
+         class="fa-solid fa-chair thumbnail-fallback"
+         style="display:none;">
+     </i>
+
+ </div>
+
+ <div class="card-name">
+     Armchair 18
+ </div>
+
+</div>
+ <!-- ARMCHAIR 19 -->
+
+ <div
+ class="furniture-card"
+ draggable="true"
+ data-type="Armchair"
+ data-model="models/armchair19.glb">
+
+ <div class="card-image">
+
+     <img
+         src="models/armchair19.png"
+         alt="Armchair 19"
+         class="furniture-thumbnail"
+         onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+
+     <i
+         class="fa-solid fa-chair thumbnail-fallback"
+         style="display:none;">
+     </i>
+
+ </div>
+
+ <div class="card-name">
+     Armchair 19
+ </div>
+
+</div>
+
+       <!-- ARMCHAIR 20-->
+
+       <div
+       class="furniture-card"
+       draggable="true"
+       data-type="Armchair"
+       data-model="models/armchair20.glb">
+
+       <div class="card-image">
+
+           <img
+               src="models/armchair20.png"
+               alt="Armchair 20"
+               class="furniture-thumbnail"
+               onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+
+           <i
+               class="fa-solid fa-chair thumbnail-fallback"
+               style="display:none;">
+           </i>
+
+       </div>
+
+       <div class="card-name">
+           Armchair 20
+       </div>
+
+   </div>
+                </div>
+
+            </div>
+
+
+            <!-- =================================================
+                 SOFAS
+            ================================================== -->
+
+            <div class="subcategory-view" id="sofasView">
+                <div class="subcategory-heading">
+                    <span>    Sofas </span>
+                </div>
+                <div class="furniture-grid">
+                    <!-- SOFA 1 -->
+                    <div
+                        class="furniture-card"
+                        draggable="true"
+                        data-type="Sofa"
+                        data-model="models/sofa1.glb">
+
+                        <div class="card-image">
+
+                            <img
+                                src="models/sofa1.png"
+                                alt="Sofa 1"
+                                class="furniture-thumbnail"
+                                onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+
+                            <i
+                                class="fa-solid fa-couch thumbnail-fallback"
+                                style="display:none;">
+                            </i>
+
+                        </div>
+
+                        <div class="card-name">
+                            Sofa 1
+                        </div>
+
+                    </div>
+
+
+                    <!-- SOFA 2 -->
+
+                    <div
+                        class="furniture-card"
+                        draggable="true"
+                        data-type="Sofa"
+                        data-model="models/sofa2.glb">
+
+                        <div class="card-image">
+
+                            <img
+                                src="models/sofa2.png"
+                                alt="Sofa 2"
+                                class="furniture-thumbnail"
+                                onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+
+                            <i
+                                class="fa-solid fa-couch thumbnail-fallback"
+                                style="display:none;">
+                            </i>
+
+                        </div>
+
+                        <div class="card-name">
+                            Sofa 2
+                        </div>
+
+                    </div>
+                        <!-- SOFA 3 -->
+
+                        <div
+                        class="furniture-card"
+                        draggable="true"
+                        data-type="Sofa"
+                        data-model="models/sofa3.glb">
+
+                        <div class="card-image">
+
+                            <img
+                                src="models/sofa3.png"
+                                alt="Sofa 3"
+                                class="furniture-thumbnail"
+                                onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+
+                            <i
+                                class="fa-solid fa-couch thumbnail-fallback"
+                                style="display:none;">
+                            </i>
+
+                        </div>
+
+                        <div class="card-name">
+                            Sofa 3
+                        </div>
+
+                    </div>
+                        <!-- SOFA 4 -->
+
+                        <div
+                        class="furniture-card"
+                        draggable="true"
+                        data-type="Sofa"
+                        data-model="models/sofa4.glb">
+
+                        <div class="card-image">
+
+                            <img
+                                src="models/sofa4.png"
+                                alt="Sofa 4"
+                                class="furniture-thumbnail"
+                                onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+
+                            <i
+                                class="fa-solid fa-couch thumbnail-fallback"
+                                style="display:none;">
+                            </i>
+
+                        </div>
+
+                        <div class="card-name">
+                            Sofa 4
+                        </div>
+
+                    </div>
+                        <!-- SOFA 5 -->
+
+                        <div
+                        class="furniture-card"
+                        draggable="true"
+                        data-type="Sofa"
+                        data-model="models/sofa5.glb">
+
+                        <div class="card-image">
+
+                            <img
+                                src="models/sofa5.png"
+                                alt="Sofa 5"
+                                class="furniture-thumbnail"
+                                onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+
+                            <i
+                                class="fa-solid fa-couch thumbnail-fallback"
+                                style="display:none;">
+                            </i>
+
+                        </div>
+
+                        <div class="card-name">
+                            Sofa 5
+                        </div>
+
+                    </div>
+                        <!-- SOFA 6 -->
+
+                        <div
+                        class="furniture-card"
+                        draggable="true"
+                        data-type="Sofa"
+                        data-model="models/sofa6.glb">
+
+                        <div class="card-image">
+
+                            <img
+                                src="models/sofa6.png"
+                                alt="Sofa 6"
+                                class="furniture-thumbnail"
+                                onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+
+                            <i
+                                class="fa-solid fa-couch thumbnail-fallback"
+                                style="display:none;">
+                            </i>
+
+                        </div>
+
+                        <div class="card-name">
+                            Sofa 6
+                        </div>
+
+                    </div>
+                        <!-- SOFA 7 -->
+
+                        <div
+                        class="furniture-card"
+                        draggable="true"
+                        data-type="Sofa"
+                        data-model="models/sofa7.glb">
+
+                        <div class="card-image">
+
+                            <img
+                                src="models/sofa7.png"
+                                alt="Sofa 7"
+                                class="furniture-thumbnail"
+                                onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+
+                            <i
+                                class="fa-solid fa-couch thumbnail-fallback"
+                                style="display:none;">
+                            </i>
+
+                        </div>
+
+                        <div class="card-name">
+                            Sofa 7
+                        </div>
+
+                    </div>
+                        <!-- SOFA 8 -->
+
+                        <div
+                        class="furniture-card"
+                        draggable="true"
+                        data-type="Sofa"
+                        data-model="models/sofa8.glb">
+
+                        <div class="card-image">
+
+                            <img
+                                src="models/sofa8.png"
+                                alt="Sofa 8"
+                                class="furniture-thumbnail"
+                                onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+
+                            <i
+                                class="fa-solid fa-couch thumbnail-fallback"
+                                style="display:none;">
+                            </i>
+
+                        </div>
+
+                        <div class="card-name">
+                            Sofa 8
+                        </div>
+
+                    </div>
+                        <!-- SOFA 9 -->
+
+                        <div
+                        class="furniture-card"
+                        draggable="true"
+                        data-type="Sofa"
+                        data-model="models/sofa9.glb">
+
+                        <div class="card-image">
+
+                            <img
+                                src="models/sofa9.png"
+                                alt="Sofa 9"
+                                class="furniture-thumbnail"
+                                onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+
+                            <i
+                                class="fa-solid fa-couch thumbnail-fallback"
+                                style="display:none;">
+                            </i>
+
+                        </div>
+
+                        <div class="card-name">
+                            Sofa 9
+                        </div>
+
+                    </div>
+                        <!-- SOFA 10 -->
+
+                        <div
+                        class="furniture-card"
+                        draggable="true"
+                        data-type="Sofa"
+                        data-model="models/sofa10.glb">
+
+                        <div class="card-image">
+
+                            <img
+                                src="models/sofa10.png"
+                                alt="Sofa 10"
+                                class="furniture-thumbnail"
+                                onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+
+                            <i
+                                class="fa-solid fa-couch thumbnail-fallback"
+                                style="display:none;">
+                            </i>
+
+                        </div>
+
+                        <div class="card-name">
+                            Sofa 10
+                        </div>
+
+                    </div>
+                        <!-- SOFA 11 -->
+
+                        <div
+                        class="furniture-card"
+                        draggable="true"
+                        data-type="Sofa"
+                        data-model="models/sofa11.glb">
+
+                        <div class="card-image">
+
+                            <img
+                                src="models/sofa11.png"
+                                alt="Sofa 11"
+                                class="furniture-thumbnail"
+                                onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+
+                            <i
+                                class="fa-solid fa-couch thumbnail-fallback"
+                                style="display:none;">
+                            </i>
+
+                        </div>
+
+                        <div class="card-name">
+                            Sofa 11
+                        </div>
+
+                    </div>
+                             <!-- SOFA 13 -->
+
+                             <div
+                             class="furniture-card"
+                             draggable="true"
+                             data-type="Sofa"
+                             data-model="models/sofa13.glb">
+     
+                             <div class="card-image">
+     
+                                 <img
+                                     src="models/sofa5.png"
+                                     alt="Sofa 13"
+                                     class="furniture-thumbnail"
+                                     onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+     
+                                 <i
+                                     class="fa-solid fa-couch thumbnail-fallback"
+                                     style="display:none;">
+                                 </i>
+     
+                             </div>
+     
+                             <div class="card-name">
+                                 Sofa 12
+                             </div>
+     
+                         </div>
+
+                </div>
+
+            </div>
+
+        </div>
+        <!-- =================================================
+             OUTDOOR
+        ================================================== -->
+        
+        <div class="side-panel" id="outdoorPanel">
+        
+            <h4>Outdoor</h4>
+        
+        
+            <!-- ==================== PATH AND LAWNS ==================== -->
+        
+            <div class="build-option">
+        
+                <i class="fa-solid fa-road"></i>
+        
+                <span>Path and Lawns</span>
+        
+                <i class="fa-solid fa-chevron-right category-arrow"></i>
+        
+            </div>
+        
+        
+            <!-- ==================== PATIO ==================== -->
+        
+            <div class="build-option">
+        
+                <i class="fa-solid fa-umbrella-beach"></i>
+        
+                <span>Patio</span>
+        
+                <i class="fa-solid fa-chevron-right category-arrow"></i>
+        
+            </div>
+        
+        
+            <!-- ==================== TREES AND PLANTS ==================== -->
+        
+            <div class="build-option">
+        
+                <i class="fa-solid fa-tree"></i>
+        
+                <span>Trees and Plants</span>
+        
+                <i class="fa-solid fa-chevron-right category-arrow"></i>
+        
+            </div>
+        
+        
+            <!-- ==================== GARAGE ==================== -->
+        
+            <div class="build-option">
+        
+                <i class="fa-solid fa-warehouse"></i>
+        
+                <span>Garage</span>
+        
+                <i class="fa-solid fa-chevron-right category-arrow"></i>
+        
+            </div>
+        
+        
+            <!-- ==================== POOL ==================== -->
+        
+            <div class="build-option">
+        
+                <i class="fa-solid fa-person-swimming"></i>
+        
+                <span>Pool</span>
+        
+                <i class="fa-solid fa-chevron-right category-arrow"></i>
+        
+            </div>
+        
+        
+            <!-- ==================== LIGHTING ==================== -->
+        
+            <div class="build-option">
+        
+                <i class="fa-solid fa-lightbulb"></i>
+        
+                <span>Lighting</span>
+        
+                <i class="fa-solid fa-chevron-right category-arrow"></i>
+        
+            </div>
+        
+        
+            <!-- ==================== OUTDOOR ACTIVITIES ==================== -->
+        
+            <div class="build-option">
+        
+                <i class="fa-solid fa-volleyball"></i>
+        
+                <span>Outdoor Activities</span>
+        
+                <i class="fa-solid fa-chevron-right category-arrow"></i>
+        
+            </div>
+        
+        
+            <!-- ==================== GARDEN ==================== -->
+        
+            <div class="build-option">
+        
+                <i class="fa-solid fa-seedling"></i>
+        
+                <span>Garden</span>
+        
+                <i class="fa-solid fa-chevron-right category-arrow"></i>
+        
+            </div>
+        
+        </div>
+        
+        
+        <!-- =================================================
+             OUTDOOR CATEGORY VIEWS
+        ================================================== -->
+        
+        
+        <!-- =================================================
+             PATH AND LAWNS
+        ================================================== -->
+        
+        <div class="subcategory-view" id="outdoorPathLawnsView">
+        
+            <div class="subcategory-heading">
+        
+                <span>Path and Lawns</span>
+        
+            </div>
+        
+            <div class="furniture-grid">
+        
+                <!-- ITEM 1 -->
+        
+                <div class="furniture-card"
+                     draggable="true"
+                     data-type="Path and Lawn"
+                     data-model="models/outdoor/path and lawns/path1.glb">
+        
+                    <div class="card-image">
+        
+                        <img
+                            src="models/outdoor/path and lawns/path1.png"
+                            alt="Path and Lawn 1"
+                            class="furniture-thumbnail"
+                            onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+        
+                        <i
+                            class="fa-solid fa-road thumbnail-fallback"
+                            style="display:none;">
+                        </i>
+        
+                    </div>
+        
+                    <span>Path and Lawn 1</span>
+        
+                </div>
+                <div class="furniture-card"
+                draggable="true"
+                data-type="Path and Lawn"
+                data-model="models/outdoor/path and lawns/path2.glb">
+   
+               <div class="card-image">
+   
+                   <img
+                       src="models/outdoor/path and lawns/path2.png"
+                       alt="Path and Lawn 1"
+                       class="furniture-thumbnail"
+                       onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+   
+                   <i
+                       class="fa-solid fa-road thumbnail-fallback"
+                       style="display:none;">
+                   </i>
+   
+               </div>
+   
+               <span>Path and Lawn 2</span>
+   
+           </div>
+           <div class="furniture-card"
+           draggable="true"
+           data-type="Path and Lawn"
+           data-model="models/outdoor/path and lawns/path3.glb">
+
+          <div class="card-image">
+
+              <img
+                  src="models/outdoor/path and lawns/path3.png"
+                  alt="Path and Lawn 3"
+                  class="furniture-thumbnail"
+                  onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+
+              <i
+                  class="fa-solid fa-road thumbnail-fallback"
+                  style="display:none;">
+              </i>
+
+          </div>
+
+          <span>Path and Lawn 3</span>
+
+      </div>
+      <div class="furniture-card"
+      draggable="true"
+      data-type="Path and Lawn"
+      data-model="models/outdoor/path and lawns/path4.glb">
+
+     <div class="card-image">
+
+         <img
+             src="models/outdoor/path and lawns/path4.png"
+             alt="Path and Lawn 4"
+             class="furniture-thumbnail"
+             onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+
+         <i
+             class="fa-solid fa-road thumbnail-fallback"
+             style="display:none;">
+         </i>
+
+     </div>
+
+     <span>Path and Lawn 4</span>
+
+ </div>
+ <div class="furniture-card"
+ draggable="true"
+ data-type="Path and Lawn"
+ data-model="models/outdoor/path and lawns/path5.glb">
+
+<div class="card-image">
+
+    <img
+        src="models/outdoor/path and lawns/path5.png"
+        alt="Path and Lawn 5"
+        class="furniture-thumbnail"
+        onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+
+    <i
+        class="fa-solid fa-road thumbnail-fallback"
+        style="display:none;">
+    </i>
+
+</div>
+
+<span>Path and Lawn 5</span>
+
+</div>
+<div class="furniture-card"
+draggable="true"
+data-type="Path and Lawn"
+data-model="models/outdoor/path and lawns/path6.glb">
+
+<div class="card-image">
+
+   <img
+       src="models/outdoor/path and lawns/path6.png"
+       alt="Path and Lawn 6"
+       class="furniture-thumbnail"
+       onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+
+   <i
+       class="fa-solid fa-road thumbnail-fallback"
+       style="display:none;">
+   </i>
+
+</div>
+
+<span>Path and Lawn 6</span>
+
+</div>
+<div class="furniture-card"
+draggable="true"
+data-type="Path and Lawn"
+data-model="models/outdoor/path and lawns/path7.glb">
+
+<div class="card-image">
+
+   <img
+       src="models/outdoor/path and lawns/path7.png"
+       alt="Path and Lawn 7"
+       class="furniture-thumbnail"
+       onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+
+   <i
+       class="fa-solid fa-road thumbnail-fallback"
+       style="display:none;">
+   </i>
+
+</div>
+
+<span>Path and Lawn 7</span>
+
+</div>
+<div class="furniture-card"
+draggable="true"
+data-type="Path and Lawn"
+data-model="models/outdoor/path and lawns/path8.glb">
+
+<div class="card-image">
+
+   <img
+       src="models/outdoor/path and lawns/path8.png"
+       alt="Path and Lawn 8"
+       class="furniture-thumbnail"
+       onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+
+   <i
+       class="fa-solid fa-road thumbnail-fallback"
+       style="display:none;">
+   </i>
+
+</div>
+
+<span>Path and Lawn 8</span>
+
+</div>
+<div class="furniture-card"
+draggable="true"
+data-type="Path and Lawn"
+data-model="models/outdoor/path and lawns/path9.glb">
+
+<div class="card-image">
+
+   <img
+       src="models/outdoor/path and lawns/path9.png"
+       alt="Path and Lawn 9"
+       class="furniture-thumbnail"
+       onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+
+   <i
+       class="fa-solid fa-road thumbnail-fallback"
+       style="display:none;">
+   </i>
+
+</div>
+
+<span>Path and Lawn 9</span>
+
+</div>
+<div class="furniture-card"
+draggable="true"
+data-type="Path and Lawn"
+data-model="models/outdoor/path and lawns/path10.glb">
+
+<div class="card-image">
+
+   <img
+       src="models/outdoor/path and lawns/path10.png"
+       alt="Path and Lawn 10"
+       class="furniture-thumbnail"
+       onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+
+   <i
+       class="fa-solid fa-road thumbnail-fallback"
+       style="display:none;">
+   </i>
+
+</div>
+
+<span>Path and Lawn 10</span>
+
+</div>
+                <!-- ITEM 2 TO ITEM 20 SAME STRUCTURE -->
+        
+            </div>
+        
+        </div>
+        
+        
+        <!-- =================================================
+             PATIO
+        ================================================== -->
+        
+        <div class="subcategory-view" id="outdoorPatioView">
+        
+            <div class="subcategory-heading">
+        
+                <span>Patio</span>
+        
+            </div>
+        
+            <div class="furniture-grid">
+        
+                <div class="furniture-card"
+                     draggable="true"
+                     data-type="Patio"
+                     data-model="models/outdoor/patio/patio1.glb">
+        
+                    <div class="card-image">
+        
+                        <img
+                            src="models/outdoor/patio/patio1.png"
+                            alt="Patio 1"
+                            class="furniture-thumbnail"
+                            onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+        
+                        <i
+                            class="fa-solid fa-umbrella-beach thumbnail-fallback"
+                            style="display:none;">
+                        </i>
+        
+                    </div>
+        
+                    <span>Patio 1</span>
+        
+                </div>
+                <div class="furniture-card"
+                draggable="true"
+                data-type="Patio"
+                data-model="models/outdoor/patio/patio2.glb">
+   
+               <div class="card-image">
+   
+                   <img
+                       src="models/outdoor/patio/patio2.png"
+                       alt="Patio 2"
+                       class="furniture-thumbnail"
+                       onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+   
+                   <i
+                       class="fa-solid fa-umbrella-beach thumbnail-fallback"
+                       style="display:none;">
+                   </i>
+   
+               </div>
+   
+               <span>Patio 2</span>
+   
+           </div>
+           <div class="furniture-card"
+           draggable="true"
+           data-type="Patio"
+           data-model="models/outdoor/patio/patio3.glb">
+
+          <div class="card-image">
+
+              <img
+                  src="models/outdoor/patio/patio3.png"
+                  alt="Patio 3"
+                  class="furniture-thumbnail"
+                  onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+
+              <i
+                  class="fa-solid fa-umbrella-beach thumbnail-fallback"
+                  style="display:none;">
+              </i>
+
+          </div>
+
+          <span>Patio 3</span>
+
+      </div>
+      <div class="furniture-card"
+      draggable="true"
+      data-type="Patio"
+      data-model="models/outdoor/patio/patio4.glb">
+
+     <div class="card-image">
+
+         <img
+             src="models/outdoor/patio/patio4.png"
+             alt="Patio 4"
+             class="furniture-thumbnail"
+             onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+
+         <i
+             class="fa-solid fa-umbrella-beach thumbnail-fallback"
+             style="display:none;">
+         </i>
+
+     </div>
+
+     <span>Patio 4</span>
+
+ </div>
+ <div class="furniture-card"
+ draggable="true"
+ data-type="Patio"
+ data-model="models/outdoor/patio/patio5.glb">
+
+<div class="card-image">
+
+    <img
+        src="models/outdoor/patio/patio5.png"
+        alt="Patio 5"
+        class="furniture-thumbnail"
+        onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+
+    <i
+        class="fa-solid fa-umbrella-beach thumbnail-fallback"
+        style="display:none;">
+    </i>
+
+</div>
+
+<span>Patio 5</span>
+
+</div>
+<div class="furniture-card"
+draggable="true"
+data-type="Patio"
+data-model="models/outdoor/patio/patio1.glb">
+
+<div class="card-image">
+
+   <img
+       src="models/outdoor/patio/patio6.png"
+       alt="Patio 6"
+       class="furniture-thumbnail"
+       onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+
+   <i
+       class="fa-solid fa-umbrella-beach thumbnail-fallback"
+       style="display:none;">
+   </i>
+
+</div>
+
+<span>Patio 6</span>
+
+</div>
+<div class="furniture-card"
+draggable="true"
+data-type="Patio"
+data-model="models/outdoor/patio/patio7.glb">
+
+<div class="card-image">
+
+   <img
+       src="models/outdoor/patio/patio7.png"
+       alt="Patio 7"
+       class="furniture-thumbnail"
+       onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+
+   <i
+       class="fa-solid fa-umbrella-beach thumbnail-fallback"
+       style="display:none;">
+   </i>
+
+</div>
+
+<span>Patio 7</span>
+
+</div>
+<div class="furniture-card"
+draggable="true"
+data-type="Patio"
+data-model="models/outdoor/patio/patio8.glb">
+
+<div class="card-image">
+
+   <img
+       src="models/outdoor/patio/patio8.png"
+       alt="Patio 8"
+       class="furniture-thumbnail"
+       onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+
+   <i
+       class="fa-solid fa-umbrella-beach thumbnail-fallback"
+       style="display:none;">
+   </i>
+
+</div>
+
+<span>Patio 8</span>
+
+</div>
+<div class="furniture-card"
+draggable="true"
+data-type="Patio"
+data-model="models/outdoor/patio/patio9.glb">
+
+<div class="card-image">
+
+   <img
+       src="models/outdoor/patio/patio9.png"
+       alt="Patio 9"
+       class="furniture-thumbnail"
+       onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+
+   <i
+       class="fa-solid fa-umbrella-beach thumbnail-fallback"
+       style="display:none;">
+   </i>
+
+</div>
+
+<span>Patio 9</span>
+
+</div>
+<div class="furniture-card"
+draggable="true"
+data-type="Patio"
+data-model="models/outdoor/patio/patio10.glb">
+
+<div class="card-image">
+
+   <img
+       src="models/outdoor/patio/patio10.png"
+       alt="Patio 10"
+       class="furniture-thumbnail"
+       onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+
+   <i
+       class="fa-solid fa-umbrella-beach thumbnail-fallback"
+       style="display:none;">
+   </i>
+
+</div>
+
+<span>Patio 10</span>
+
+</div>
+                <!-- ITEM 2 TO ITEM 20 -->
+        
+            </div>
+        
+        </div>
+        
+        
+        <!-- =================================================
+             TREES AND PLANTS
+        ================================================== -->
+        
+        <div class="subcategory-view" id="outdoorTreesView">
+        
+            <div class="subcategory-heading">
+        
+                <span>Trees and Plants</span>
+        
+            </div>
+        
+            <div class="furniture-grid">
+                <div class="furniture-card"
+                draggable="true"
+                data-type="Tree and Plant"
+                data-model="models/outdoor/trees/tree1.glb">
+   
+               <div class="card-image">
+   
+                   <img
+                       src="models/outdoor/trees/tree1.png"
+                       alt="Tree and Plant 1"
+                       class="furniture-thumbnail"
+                       onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+   
+                   <i
+                       class="fa-solid fa-tree thumbnail-fallback"
+                       style="display:none;">
+                   </i>
+   
+               </div>
+   
+               <span>Tree and Plant 1</span>
+   
+           </div>
+        
+                <div class="furniture-card"
+                     draggable="true"
+                     data-type="Tree and Plant"
+                     data-model="models/outdoor/trees/tree2.glb">
+        
+                    <div class="card-image">
+        
+                        <img
+                            src="models/outdoor/trees/tree2.png"
+                            alt="Tree and Plant 2"
+                            class="furniture-thumbnail"
+                            onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+        
+                        <i
+                            class="fa-solid fa-tree thumbnail-fallback"
+                            style="display:none;">
+                        </i>
+        
+                    </div>
+        
+                    <span>Tree and Plant 2</span>
+        
+                </div>
+                <div class="furniture-card"
+                draggable="true"
+                data-type="Tree and Plant"
+                data-model="models/outdoor/trees/tree3.glb">
+   
+               <div class="card-image">
+   
+                   <img
+                       src="models/outdoor/trees/tree3.png"
+                       alt="Tree and Plant 3"
+                       class="furniture-thumbnail"
+                       onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+   
+                   <i
+                       class="fa-solid fa-tree thumbnail-fallback"
+                       style="display:none;">
+                   </i>
+   
+               </div>
+   
+               <span>Tree and Plant 3</span>
+   
+           </div>
+           <div class="furniture-card"
+           draggable="true"
+           data-type="Tree and Plant"
+           data-model="models/outdoor/trees/tree4.glb">
+
+          <div class="card-image">
+
+              <img
+                  src="models/outdoor/trees/tree4.png"
+                  alt="Tree and Plant 4"
+                  class="furniture-thumbnail"
+                  onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+
+              <i
+                  class="fa-solid fa-tree thumbnail-fallback"
+                  style="display:none;">
+              </i>
+
+          </div>
+
+          <span>Tree and Plant 4</span>
+
+      </div>
+      <div class="furniture-card"
+      draggable="true"
+      data-type="Tree and Plant"
+      data-model="models/outdoor/trees/tree5.glb">
+
+     <div class="card-image">
+
+         <img
+             src="models/outdoor/trees/tree5.png"
+             alt="Tree and Plant 5"
+             class="furniture-thumbnail"
+             onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+
+         <i
+             class="fa-solid fa-tree thumbnail-fallback"
+             style="display:none;">
+         </i>
+
+     </div>
+
+     <span>Tree and Plant 5</span>
+
+ </div>
+ <div class="furniture-card"
+ draggable="true"
+ data-type="Tree and Plant"
+ data-model="models/outdoor/trees/tree6.glb">
+
+<div class="card-image">
+
+    <img
+        src="models/outdoor/trees/tree6.png"
+        alt="Tree and Plant 6"
+        class="furniture-thumbnail"
+        onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+
+    <i
+        class="fa-solid fa-tree thumbnail-fallback"
+        style="display:none;">
+    </i>
+
+</div>
+
+<span>Tree and Plant 6</span>
+
+</div>
+<div class="furniture-card"
+draggable="true"
+data-type="Tree and Plant"
+data-model="models/outdoor/trees/tree7.glb">
+
+<div class="card-image">
+
+   <img
+       src="models/outdoor/trees/tree7.png"
+       alt="Tree and Plant 7"
+       class="furniture-thumbnail"
+       onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+
+   <i
+       class="fa-solid fa-tree thumbnail-fallback"
+       style="display:none;">
+   </i>
+
+</div>
+
+<span>Tree and Plant 7</span>
+
+</div>
+<div class="furniture-card"
+draggable="true"
+data-type="Tree and Plant"
+data-model="models/outdoor/trees/tree8.glb">
+
+<div class="card-image">
+
+   <img
+       src="models/outdoor/trees/tree8.png"
+       alt="Tree and Plant 8"
+       class="furniture-thumbnail"
+       onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+
+   <i
+       class="fa-solid fa-tree thumbnail-fallback"
+       style="display:none;">
+   </i>
+
+</div>
+
+<span>Tree and Plant 8</span>
+
+</div>
+<div class="furniture-card"
+draggable="true"
+data-type="Tree and Plant"
+data-model="models/outdoor/trees/tree9.glb">
+
+<div class="card-image">
+
+   <img
+       src="models/outdoor/trees/tree9.png"
+       alt="Tree and Plant 9"
+       class="furniture-thumbnail"
+       onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+
+   <i
+       class="fa-solid fa-tree thumbnail-fallback"
+       style="display:none;">
+   </i>
+
+</div>
+
+<span>Tree and Plant 9</span>
+
+</div>
+<div class="furniture-card"
+draggable="true"
+data-type="Tree and Plant"
+data-model="models/outdoor/trees/tree10.glb">
+
+<div class="card-image">
+
+   <img
+       src="models/outdoor/trees/tree10.png"
+       alt="Tree and Plant 10"
+       class="furniture-thumbnail"
+       onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+
+   <i
+       class="fa-solid fa-tree thumbnail-fallback"
+       style="display:none;">
+   </i>
+
+</div>
+
+<span>Tree and Plant 10</span>
+
+</div>
+                <!-- ITEM 2 TO ITEM 20 -->
+        
+            </div>
+        
+        </div>
+        
+        
+        <!-- =================================================
+             GARAGE
+        ================================================== -->
+        
+        <div class="subcategory-view" id="outdoorGarageView">
+        
+            <div class="subcategory-heading">
+        
+                <span>Garage</span>
+        
+            </div>
+        
+            <div class="furniture-grid">
+        
+                <div class="furniture-card"
+                     draggable="true"
+                     data-type="Garage"
+                     data-model="models/outdoor/garage/garage1.glb">
+        
+                    <div class="card-image">
+        
+                        <img
+                            src="models/outdoor/garage/garage1.png"
+                            alt="Garage 1"
+                            class="furniture-thumbnail"
+                            onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+        
+                        <i
+                            class="fa-solid fa-warehouse thumbnail-fallback"
+                            style="display:none;">
+                        </i>
+        
+                    </div>
+        
+                    <span>Garage 1</span>
+        
+                </div>
+
+                <div class="furniture-card"
+                draggable="true"
+                data-type="Garage"
+                data-model="models/outdoor/garage/garage2.glb">
+   
+               <div class="card-image">
+   
+                   <img
+                       src="models/outdoor/garage/garage2.png"
+                       alt="Garage 2"
+                       class="furniture-thumbnail"
+                       onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+   
+                   <i
+                       class="fa-solid fa-warehouse thumbnail-fallback"
+                       style="display:none;">
+                   </i>
+   
+               </div>
+   
+               <span>Garage 2</span>
+   
+           </div>
+           <div class="furniture-card"
+           draggable="true"
+           data-type="Garage"
+           data-model="models/outdoor/garage/garage3.glb">
+
+          <div class="card-image">
+
+              <img
+                  src="models/outdoor/garage/garage3.png"
+                  alt="Garage 3"
+                  class="furniture-thumbnail"
+                  onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+
+              <i
+                  class="fa-solid fa-warehouse thumbnail-fallback"
+                  style="display:none;">
+              </i>
+
+          </div>
+
+          <span>Garage 3</span>
+
+      </div>
+      <div class="furniture-card"
+      draggable="true"
+      data-type="Garage"
+      data-model="models/outdoor/garage/garage4.glb">
+
+     <div class="card-image">
+
+         <img
+             src="models/outdoor/garage/garage4.png"
+             alt="Garage 4"
+             class="furniture-thumbnail"
+             onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+
+         <i
+             class="fa-solid fa-warehouse thumbnail-fallback"
+             style="display:none;">
+         </i>
+
+     </div>
+
+     <span>Garage 4</span>
+
+ </div>
+ <div class="furniture-card"
+ draggable="true"
+ data-type="Garage"
+ data-model="models/outdoor/garage/garage5.glb">
+
+<div class="card-image">
+
+    <img
+        src="models/outdoor/garage/garage5.png"
+        alt="Garage 5"
+        class="furniture-thumbnail"
+        onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+
+    <i
+        class="fa-solid fa-warehouse thumbnail-fallback"
+        style="display:none;">
+    </i>
+
+</div>
+
+<span>Garage 5</span>
+
+</div> 
+<div class="furniture-card"
+draggable="true"
+data-type="Garage"
+data-model="models/outdoor/garage/garage6.glb">
+
+<div class="card-image">
+
+   <img
+       src="models/outdoor/garage/garage6.png"
+       alt="Garage 6"
+       class="furniture-thumbnail"
+       onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+
+   <i
+       class="fa-solid fa-warehouse thumbnail-fallback"
+       style="display:none;">
+   </i>
+
+</div>
+
+<span>Garage 6</span>
+
+</div>
+<div class="furniture-card"
+draggable="true"
+data-type="Garage"
+data-model="models/outdoor/garage/garage7.glb">
+
+<div class="card-image">
+
+   <img
+       src="models/outdoor/garage/garage7.png"
+       alt="Garage 7"
+       class="furniture-thumbnail"
+       onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+
+   <i
+       class="fa-solid fa-warehouse thumbnail-fallback"
+       style="display:none;">
+   </i>
+
+</div>
+
+<span>Garage 7</span>
+
+</div>
+<div class="furniture-card"
+draggable="true"
+data-type="Garage"
+data-model="models/outdoor/garage/garage8.glb">
+
+<div class="card-image">
+
+   <img
+       src="models/outdoor/garage/garage8.png"
+       alt="Garage 8 "
+       class="furniture-thumbnail"
+       onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+
+   <i
+       class="fa-solid fa-warehouse thumbnail-fallback"
+       style="display:none;">
+   </i>
+
+</div>
+
+<span>Garage 8</span>
+
+</div>
+<div class="furniture-card"
+draggable="true"
+data-type="Garage"
+data-model="models/outdoor/garage/garage9.glb">
+
+<div class="card-image">
+
+   <img
+       src="models/outdoor/garage/garage9.png"
+       alt="Garage 9"
+       class="furniture-thumbnail"
+       onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+
+   <i
+       class="fa-solid fa-warehouse thumbnail-fallback"
+       style="display:none;">
+   </i>
+
+</div>
+
+<span>Garage 9</span>
+
+</div>
+<div class="furniture-card"
+draggable="true"
+data-type="Garage"
+data-model="models/outdoor/garage/garage10.glb">
+
+<div class="card-image">
+
+   <img
+       src="models/outdoor/garage/garage10.png"
+       alt="Garage 10"
+       class="furniture-thumbnail"
+       onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+
+   <i
+       class="fa-solid fa-warehouse thumbnail-fallback"
+       style="display:none;">
+   </i>
+
+</div>
+
+<span>Garage 10</span>
+
+</div>
+                <!-- ITEM 2 TO ITEM 20 -->
+        
+            </div>
+        
+        </div>
+        
+        
+        <!-- =================================================
+             POOL
+        ================================================== -->
+        
+        <div class="subcategory-view" id="outdoorPoolView">
+        
+            <div class="subcategory-heading">
+        
+                <span>Pool</span>
+        
+            </div>
+        
+            <div class="furniture-grid">
+        
+                <div class="furniture-card"
+                     draggable="true"
+                     data-type="Pool"
+                     data-model="models/outdoor/pool/pool1.glb">
+        
+                    <div class="card-image">
+        
+                        <img
+                            src="models/outdoor/pool/pool1.png"
+                            alt="Pool 1"
+                            class="furniture-thumbnail"
+                            onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+        
+                        <i
+                            class="fa-solid fa-person-swimming thumbnail-fallback"
+                            style="display:none;">
+                        </i>
+        
+                    </div>
+        
+                    <span>Pool 1</span>
+        
+                </div>
+                <div class="furniture-card"
+                draggable="true"
+                data-type="Pool"
+                data-model="models/outdoor/pool/pool2.glb">
+   
+               <div class="card-image">
+   
+                   <img
+                       src="models/outdoor/pool/pool2.png"
+                       alt="Pool 2"
+                       class="furniture-thumbnail"
+                       onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+   
+                   <i
+                       class="fa-solid fa-person-swimming thumbnail-fallback"
+                       style="display:none;">
+                   </i>
+   
+               </div>
+   
+               <span>Pool 2</span>
+   
+           </div>
+           <div class="furniture-card"
+           draggable="true"
+           data-type="Pool"
+           data-model="models/outdoor/pool/pool3.glb">
+
+          <div class="card-image">
+
+              <img
+                  src="models/outdoor/pool/pool3.png"
+                  alt="Pool 3"
+                  class="furniture-thumbnail"
+                  onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+
+              <i
+                  class="fa-solid fa-person-swimming thumbnail-fallback"
+                  style="display:none;">
+              </i>
+
+          </div>
+
+          <span>Pool 3</span>
+
+      </div>
+      <div class="furniture-card"
+      draggable="true"
+      data-type="Pool"
+      data-model="models/outdoor/pool/pool4.glb">
+
+     <div class="card-image">
+
+         <img
+             src="models/outdoor/pool/pool4.png"
+             alt="Pool 4"
+             class="furniture-thumbnail"
+             onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+
+         <i
+             class="fa-solid fa-person-swimming thumbnail-fallback"
+             style="display:none;">
+         </i>
+
+     </div>
+
+     <span>Pool 4</span>
+
+ </div>
+ <div class="furniture-card"
+ draggable="true"
+ data-type="Pool"
+ data-model="models/outdoor/pool/pool5.glb">
+
+<div class="card-image">
+
+    <img
+        src="models/outdoor/pool/pool5.png"
+        alt="Pool 5"
+        class="furniture-thumbnail"
+        onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+
+    <i
+        class="fa-solid fa-person-swimming thumbnail-fallback"
+        style="display:none;">
+    </i>
+
+</div>
+
+<span>Pool 5</span>
+
+</div>
+<div class="furniture-card"
+draggable="true"
+data-type="Pool"
+data-model="models/outdoor/pool/pool6.glb">
+
+<div class="card-image">
+
+   <img
+       src="models/outdoor/pool/pool6.png"
+       alt="Pool 6"
+       class="furniture-thumbnail"
+       onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+
+   <i
+       class="fa-solid fa-person-swimming thumbnail-fallback"
+       style="display:none;">
+   </i>
+
+</div>
+
+<span>Pool 6</span>
+
+</div>
+<div class="furniture-card"
+draggable="true"
+data-type="Pool"
+data-model="models/outdoor/pool/pool7.glb">
+
+<div class="card-image">
+
+   <img
+       src="models/outdoor/pool/pool7.png"
+       alt="Pool 7"
+       class="furniture-thumbnail"
+       onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+
+   <i
+       class="fa-solid fa-person-swimming thumbnail-fallback"
+       style="display:none;">
+   </i>
+
+</div>
+
+<span>Pool 7</span>
+
+</div>
+<div class="furniture-card"
+draggable="true"
+data-type="Pool"
+data-model="models/outdoor/pool/pool8.glb">
+
+<div class="card-image">
+
+   <img
+       src="models/outdoor/pool/pool8.png"
+       alt="Pool 8"
+       class="furniture-thumbnail"
+       onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+
+   <i
+       class="fa-solid fa-person-swimming thumbnail-fallback"
+       style="display:none;">
+   </i>
+
+</div>
+
+<span>Pool 8</span>
+
+</div>
+<div class="furniture-card"
+draggable="true"
+data-type="Pool"
+data-model="models/outdoor/pool/pool9.glb">
+
+<div class="card-image">
+
+   <img
+       src="models/outdoor/pool/pool9.png"
+       alt="Pool 9"
+       class="furniture-thumbnail"
+       onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+
+   <i
+       class="fa-solid fa-person-swimming thumbnail-fallback"
+       style="display:none;">
+   </i>
+
+</div>
+
+<span>Pool 9</span>
+
+</div>
+<div class="furniture-card"
+draggable="true"
+data-type="Pool"
+data-model="models/outdoor/pool/pool10.glb">
+
+<div class="card-image">
+
+   <img
+       src="models/outdoor/pool/pool10.png"
+       alt="Pool 10"
+       class="furniture-thumbnail"
+       onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+
+   <i
+       class="fa-solid fa-person-swimming thumbnail-fallback"
+       style="display:none;">
+   </i>
+
+</div>
+
+<span>Pool 10</span>
+
+</div>
+                <!-- ITEM 2 TO ITEM 20 -->
+        
+            </div>
+        
+        </div>
+        
+        
+        <!-- =================================================
+             LIGHTING
+        ================================================== -->
+        
+        <div class="subcategory-view" id="outdoorLightingView">
+        
+            <div class="subcategory-heading">
+        
+                <span>Lighting</span>
+        
+            </div>
+        
+            <div class="furniture-grid">
+        
+                <div class="furniture-card"
+                     draggable="true"
+                     data-type="Outdoor Lighting"
+                     data-model="models/outdoor/lighting/lighting1.glb">
+        
+                    <div class="card-image">
+        
+                        <img
+                            src="models/outdoor/lighting/lighting1.png"
+                            alt="Lighting 1"
+                            class="furniture-thumbnail"
+                            onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+        
+                        <i
+                            class="fa-solid fa-lightbulb thumbnail-fallback"
+                            style="display:none;">
+                        </i>
+        
+                    </div>
+        
+                    <span>Lighting 1</span>
+        
+                </div>
+                <div class="furniture-card"
+                draggable="true"
+                data-type="Outdoor Lighting"
+                data-model="models/outdoor/lighting/lighting2.glb">
+   
+               <div class="card-image">
+   
+                   <img
+                       src="models/outdoor/lighting/lighting2.png"
+                       alt="Lighting 3"
+                       class="furniture-thumbnail"
+                       onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+   
+                   <i
+                       class="fa-solid fa-lightbulb thumbnail-fallback"
+                       style="display:none;">
+                   </i>
+   
+               </div>
+   
+               <span>Lighting 2</span>
+   
+           </div>
+           <div class="furniture-card"
+           draggable="true"
+           data-type="Outdoor Lighting"
+           data-model="models/outdoor/lighting/lighting3.glb">
+
+          <div class="card-image">
+
+              <img
+                  src="models/outdoor/lighting/lighting3.png"
+                  alt="Lighting 3"
+                  class="furniture-thumbnail"
+                  onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+
+              <i
+                  class="fa-solid fa-lightbulb thumbnail-fallback"
+                  style="display:none;">
+              </i>
+
+          </div>
+
+          <span>Lighting 3</span>
+
+      </div>
+      <div class="furniture-card"
+      draggable="true"
+      data-type="Outdoor Lighting"
+      data-model="models/outdoor/lighting/lighting4.glb">
+
+     <div class="card-image">
+
+         <img
+             src="models/outdoor/lighting/lighting4.png"
+             alt="Lighting 4"
+             class="furniture-thumbnail"
+             onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+
+         <i
+             class="fa-solid fa-lightbulb thumbnail-fallback"
+             style="display:none;">
+         </i>
+
+     </div>
+
+     <span>Lighting 4</span>
+
+ </div>
+ <div class="furniture-card"
+ draggable="true"
+ data-type="Outdoor Lighting"
+ data-model="models/outdoor/lighting/lighting5.glb">
+
+<div class="card-image">
+
+    <img
+        src="models/outdoor/lighting/lighting5.png"
+        alt="Lighting 5"
+        class="furniture-thumbnail"
+        onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+
+    <i
+        class="fa-solid fa-lightbulb thumbnail-fallback"
+        style="display:none;">
+    </i>
+
+</div>
+
+<span>Lighting 5</span>
+
+</div>
+<div class="furniture-card"
+draggable="true"
+data-type="Outdoor Lighting"
+data-model="models/outdoor/lighting/lighting6.glb">
+
+<div class="card-image">
+
+   <img
+       src="models/outdoor/lighting/lighting6.png"
+       alt="Lighting 6"
+       class="furniture-thumbnail"
+       onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+
+   <i
+       class="fa-solid fa-lightbulb thumbnail-fallback"
+       style="display:none;">
+   </i>
+
+</div>
+
+<span>Lighting 6</span>
+
+</div>
+<div class="furniture-card"
+draggable="true"
+data-type="Outdoor Lighting"
+data-model="models/outdoor/lighting/lighting7.glb">
+
+<div class="card-image">
+
+   <img
+       src="models/outdoor/lighting/lighting7.png"
+       alt="Lighting 7"
+       class="furniture-thumbnail"
+       onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+
+   <i
+       class="fa-solid fa-lightbulb thumbnail-fallback"
+       style="display:none;">
+   </i>
+
+</div>
+
+<span>Lighting 7</span>
+
+</div>
+<div class="furniture-card"
+draggable="true"
+data-type="Outdoor Lighting"
+data-model="models/outdoor/lighting/lighting8.glb">
+
+<div class="card-image">
+
+   <img
+       src="models/outdoor/lighting/lighting8.png"
+       alt="Lighting 8"
+       class="furniture-thumbnail"
+       onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+
+   <i
+       class="fa-solid fa-lightbulb thumbnail-fallback"
+       style="display:none;">
+   </i>
+
+</div>
+
+<span>Lighting 8</span>
+
+</div>
+<div class="furniture-card"
+draggable="true"
+data-type="Outdoor Lighting"
+data-model="models/outdoor/lighting/lighting9.glb">
+
+<div class="card-image">
+
+   <img
+       src="models/outdoor/lighting/lighting9.png"
+       alt="Lighting 9"
+       class="furniture-thumbnail"
+       onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+
+   <i
+       class="fa-solid fa-lightbulb thumbnail-fallback"
+       style="display:none;">
+   </i>
+
+</div>
+
+<span>Lighting 9</span>
+
+</div>
+<div class="furniture-card"
+draggable="true"
+data-type="Outdoor Lighting"
+data-model="models/outdoor/lighting/lighting10.glb">
+
+<div class="card-image">
+
+   <img
+       src="models/outdoor/lighting/lighting10.png"
+       alt="Lighting 10"
+       class="furniture-thumbnail"
+       onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+
+   <i
+       class="fa-solid fa-lightbulb thumbnail-fallback"
+       style="display:none;">
+   </i>
+
+</div>
+
+<span>Lighting 10</span>
+
+</div>
+                <!-- ITEM 2 TO ITEM 20 -->
+        
+            </div>
+        
+        </div>
+        
+        
+        <!-- =================================================
+             OUTDOOR ACTIVITIES
+        ================================================== -->
+        
+        <div class="subcategory-view" id="outdoorActivitiesView">
+        
+            <div class="subcategory-heading">
+        
+                <span>Outdoor Activities</span>
+        
+            </div>
+        
+            <div class="furniture-grid">
+        
+                <div class="furniture-card"
+                     draggable="true"
+                     data-type="Outdoor Activity"
+                     data-model="models/outdoor/activity/activity1.glb">
+        
+                    <div class="card-image">
+        
+                        <img
+                            src="models/outdoor/activity/activity1.png"
+                            alt="Outdoor Activity 1"
+                            class="furniture-thumbnail"
+                            onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+        
+                        <i
+                            class="fa-solid fa-volleyball thumbnail-fallback"
+                            style="display:none;">
+                        </i>
+        
+                    </div>
+        
+                    <span>Outdoor Activity 1</span>
+        
+                </div>
+                <div class="furniture-card"
+                draggable="true"
+                data-type="Outdoor Activity"
+                data-model="models/outdoor/activities/activity1.glb">
+   
+               <div class="card-image">
+   
+                   <img
+                       src="models/outdoor/activity/activity2.png"
+                       alt="Outdoor Activity 2"
+                       class="furniture-thumbnail"
+                       onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+   
+                   <i
+                       class="fa-solid fa-volleyball thumbnail-fallback"
+                       style="display:none;">
+                   </i>
+   
+               </div>
+   
+               <span>Outdoor Activity 2</span>
+   
+           </div>
+           <div class="furniture-card"
+           draggable="true"
+           data-type="Outdoor Activity"
+           data-model="models/outdoor/activity/activity3.glb">
+
+          <div class="card-image">
+
+              <img
+                  src="models/outdoor/activity/activity3.png"
+                  alt="Outdoor Activity 3"
+                  class="furniture-thumbnail"
+                  onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+
+              <i
+                  class="fa-solid fa-volleyball thumbnail-fallback"
+                  style="display:none;">
+              </i>
+
+          </div>
+
+          <span>Outdoor Activity 3</span>
+
+      </div>
+      <div class="furniture-card"
+      draggable="true"
+      data-type="Outdoor Activity"
+      data-model="models/outdoor/activity/activity4.glb">
+
+     <div class="card-image">
+
+         <img
+             src="models/outdoor/activity/activity4.png"
+             alt="Outdoor Activity 1"
+             class="furniture-thumbnail"
+             onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+
+         <i
+             class="fa-solid fa-volleyball thumbnail-fallback"
+             style="display:none;">
+         </i>
+
+     </div>
+
+     <span>Outdoor Activity 4</span>
+
+ </div>
+ <div class="furniture-card"
+ draggable="true"
+ data-type="Outdoor Activity"
+ data-model="models/outdoor/activity/activity5.glb">
+
+<div class="card-image">
+
+    <img
+        src="models/outdoor/activity/activity5.png"
+        alt="Outdoor Activity 5"
+        class="furniture-thumbnail"
+        onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+
+    <i
+        class="fa-solid fa-volleyball thumbnail-fallback"
+        style="display:none;">
+    </i>
+
+</div>
+
+<span>Outdoor Activity 5</span>
+
+</div>
+<div class="furniture-card"
+draggable="true"
+data-type="Outdoor Activity"
+data-model="models/outdoor/activity/activity6.glb">
+
+<div class="card-image">
+
+   <img
+       src="models/outdoor/activity/activity6.png"
+       alt="Outdoor Activity 6"
+       class="furniture-thumbnail"
+       onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+
+   <i
+       class="fa-solid fa-volleyball thumbnail-fallback"
+       style="display:none;">
+   </i>
+
+</div>
+
+<span>Outdoor Activity 6</span>
+
+</div>
+        
+                <!-- ITEM 2 TO ITEM 20 -->
+        
+            </div>
+        
+        </div>
+        
+        
+        <!-- =================================================
+             GARDEN
+        ================================================== -->
+        
+        <div class="subcategory-view" id="outdoorGardenView">
+        
+            <div class="subcategory-heading">
+        
+                <span>Garden</span>
+        
+            </div>
+        
+            <div class="furniture-grid">
+        
+                <div class="furniture-card"
+                     draggable="true"
+                     data-type="Garden"
+                     data-model="models/outdoor/garden/garden1.glb">
+        
+                    <div class="card-image">
+        
+                        <img
+                            src="models/outdoor/garden/garden1.png"
+                            alt="Garden 1"
+                            class="furniture-thumbnail"
+                            onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+        
+                        <i
+                            class="fa-solid fa-seedling thumbnail-fallback"
+                            style="display:none;">
+                        </i>
+        
+                    </div>
+        
+                    <span>Garden 1</span>
+        
+                </div>
+                
+                <div class="furniture-card"
+                     draggable="true"
+                     data-type="Garden"
+                     data-model="models/outdoor/garden/garden2.glb">
+        
+                    <div class="card-image">
+        
+                        <img
+                            src="models/outdoor/garden/garden2.png"
+                            alt="Garden 1"
+                            class="furniture-thumbnail"
+                            onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+        
+                        <i
+                            class="fa-solid fa-seedling thumbnail-fallback"
+                            style="display:none;">
+                        </i>
+        
+                    </div>
+        
+                    <span>Garden 2</span>
+        
+                </div>
+                
+                <div class="furniture-card"
+                     draggable="true"
+                     data-type="Garden"
+                     data-model="models/outdoor/garden/garden3.glb">
+        
+                    <div class="card-image">
+        
+                        <img
+                            src="models/outdoor/garden/garden3.png"
+                            alt="Garden 1"
+                            class="furniture-thumbnail"
+                            onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+        
+                        <i
+                            class="fa-solid fa-seedling thumbnail-fallback"
+                            style="display:none;">
+                        </i>
+        
+                    </div>
+        
+                    <span>Garden 3</span>
+        
+                </div>
+        
+                <div class="furniture-card"
+                     draggable="true"
+                     data-type="Garden"
+                     data-model="models/outdoor/garden/garden4.glb">
+        
+                    <div class="card-image">
+        
+                        <img
+                            src="models/outdoor/garden/garden4.png"
+                            alt="Garden 1"
+                            class="furniture-thumbnail"
+                            onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+        
+                        <i
+                            class="fa-solid fa-seedling thumbnail-fallback"
+                            style="display:none;">
+                        </i>
+        
+                    </div>
+        
+                    <span>Garden 4</span>
+        
+                </div>
+                
+                <div class="furniture-card"
+                     draggable="true"
+                     data-type="Garden"
+                     data-model="models/outdoor/garden/garden5.glb">
+        
+                    <div class="card-image">
+        
+                        <img
+                            src="models/outdoor/garden/garden5.png"
+                            alt="Garden 5"
+                            class="furniture-thumbnail"
+                            onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+        
+                        <i
+                            class="fa-solid fa-seedling thumbnail-fallback"
+                            style="display:none;">
+                        </i>
+        
+                    </div>
+        
+                    <span>Garden 5</span>
+        
+                </div>
+                
+                <div class="furniture-card"
+                     draggable="true"
+                     data-type="Garden"
+                     data-model="models/outdoor/garden/garden6.glb">
+        
+                    <div class="card-image">
+        
+                        <img
+                            src="models/outdoor/garden/garden6.png"
+                            alt="Garden 1"
+                            class="furniture-thumbnail"
+                            onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+        
+                        <i
+                            class="fa-solid fa-seedling thumbnail-fallback"
+                            style="display:none;">
+                        </i>
+        
+                    </div>
+        
+                    <span>Garden 6</span>
+        
+                </div>
+                
+                <div class="furniture-card"
+                     draggable="true"
+                     data-type="Garden"
+                     data-model="models/outdoor/garden/garden7.glb">
+        
+                    <div class="card-image">
+        
+                        <img
+                            src="models/outdoor/garden/garden7.png"
+                            alt="Garden 1"
+                            class="furniture-thumbnail"
+                            onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+        
+                        <i
+                            class="fa-solid fa-seedling thumbnail-fallback"
+                            style="display:none;">
+                        </i>
+        
+                    </div>
+        
+                    <span>Garden 7</span>
+        
+                </div>
+                
+                <div class="furniture-card"
+                     draggable="true"
+                     data-type="Garden"
+                     data-model="models/outdoor/garden/garden8.glb">
+        
+                    <div class="card-image">
+        
+                        <img
+                            src="models/outdoor/garden/garden8.png"
+                            alt="Garden 8"
+                            class="furniture-thumbnail"
+                            onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+        
+                        <i
+                            class="fa-solid fa-seedling thumbnail-fallback"
+                            style="display:none;">
+                        </i>
+        
+                    </div>
+        
+                    <span>Garden 8</span>
+        
+                </div>
+                
+                <div class="furniture-card"
+                     draggable="true"
+                     data-type="Garden"
+                     data-model="models/outdoor/garden/garden9.glb">
+        
+                    <div class="card-image">
+        
+                        <img
+                            src="models/outdoor/garden/garden9.png"
+                            alt="Garden 1"
+                            class="furniture-thumbnail"
+                            onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+        
+                        <i
+                            class="fa-solid fa-seedling thumbnail-fallback"
+                            style="display:none;">
+                        </i>
+        
+                    </div>
+        
+                    <span>Garden 9</span>
+        
+                </div>
+                
+                <div class="furniture-card"
+                     draggable="true"
+                     data-type="Garden"
+                     data-model="models/outdoor/garden/garden10.glb">
+        
+                    <div class="card-image">
+        
+                        <img
+                            src="models/outdoor/garden/garden10.png"
+                            alt="Garden 1"
+                            class="furniture-thumbnail"
+                            onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+        
+                        <i
+                            class="fa-solid fa-seedling thumbnail-fallback"
+                            style="display:none;">
+                        </i>
+        
+                    </div>
+        
+                    <span>Garden 10</span>
+        
+                </div>
+                <!-- ITEM 2 TO ITEM 20 -->
+        
+            </div>
+        
+        </div>
+        
+        <!-- =================================================
+             PEOPLE
+        ================================================== -->
+
+        <div
+            class="side-panel"
+            id="peoplePanel">
+
+            <h4>People</h4>
+
+
+            <div class="build-option">
+
+                <i class="fa-solid fa-person"></i>
+
+                <span>
+                    Person
+                </span>
+
+            </div>
+
+        </div>
+
+
+        <!-- =================================================
+             NEW
+        ================================================== -->
+
+        <div
+            class="side-panel"
+            id="newPanel">
+
+            <h4>New</h4>
+
+
+            <div class="build-option">
+
+                <i class="fa-solid fa-plus"></i>
+
+                <span>
+                    New Design
+                </span>
+
+            </div>
+
+        </div>
+        <!-- =================================================
+             STRUCTURE
+        ================================================== -->
+
+        <div
+            class="side-panel"
+            id="structurePanel">
+
+            <h4>Structure</h4>
+
+
+            <div class="build-option">
+
+                <i class="fa-solid fa-cubes"></i>
+
+                <span>
+                    Structure
+                </span>
+
+            </div>
+
+        </div>
+
+
+        <!-- =================================================
+             CHAIRS
+        ================================================== -->
+
+        <div
+            class="side-panel"
+            id="chairsPanel">
+
+            <h4>Chairs</h4>
+
+
+            <div class="build-option">
+
+                <i class="fa-solid fa-chair"></i>
+
+                <span>
+                    Chairs
+                </span>
+
+            </div>
+
+        </div>
+
+
+    </div>
+    
+<!-- MAIN WORKSPACE -->
+    <main class="workspace">
+        <!-- 2D ROOM CANVAS -->
+        <div id="room">
+            <canvas id="floorCanvas"></canvas>
+            <div class="label">Room (25 m²)</div>
+            <div class="dimension top"><span id="topDimension">5 m</span></div>
+            <div class="dimension bottom"><span id="bottomDimension">5 m</span></div>
+            <div class="dimension left"><span id="leftDimension">5 m</span></div>
+            <div class="dimension right"><span id="rightDimension">5 m</span></div>
+        </div>
+
+        <!-- THREE.JS 3D VIEW -->
+        <div id="threeView" class="three-view">
+            <div class="three-loading" id="threeLoading">Loading 3D View...</div>
+            <div class="three-controls">
+                <button id="cameraReset" title="Reset Camera"><i class="fa-solid fa-camera"></i></button>
+                <button id="threeFullscreen" title="Fullscreen"><i class="fa-solid fa-expand"></i></button>
+            </div>
+        </div>
+       <!-- FLOATING RIGHT BUTTONS -->
+<div class="canvas-tools">
+    <button id="roomFullscreen" title="Fullscreen">
+        <i class="fa-solid fa-expand"></i>
+    </button>
+</div>
+        <!-- ZOOM -->
+        <!-- <div class="zoom-controls">
+            <button id="zoomIn">+</button>
+            <span id="zoomValue">100%</span>
+            <button id="zoomOut">-</button>
+        </div> -->
+    </main>
+</div>
+
+<!-- =====================================================
+     BOTTOM PROPERTIES
+===================================================== -->
+
+<div class="properties-bar">
+
+
+    <div class="property">
+
+        <label>
+
+            Width:
+
+        </label>
+
+
+        <input
+            id="objectWidth"
+            type="text"
+            value="500 cm">
+
+    </div>
+
+
+
+    <div class="property">
+
+        <label>
+
+            Depth:
+
+        </label>
+
+
+        <input
+            id="objectDepth"
+            type="text"
+            value="300 cm">
+
+    </div>
+
+
+
+    <div class="property">
+
+        <label>
+
+            Height:
+
+        </label>
+
+
+        <input
+            id="objectHeight"
+            type="text"
+            value="280 cm">
+
+    </div>
+
+
+
+    <div class="property">
+
+        <label>
+
+            Angle:
+
+        </label>
+
+
+        <input
+            id="objectAngle"
+            type="text"
+            value="0°">
+
+    </div>
+
+
+
+    <div class="property">
+
+        <label>
+
+            Elevation:
+
+        </label>
+
+
+        <input
+            id="objectElevation"
+            type="text"
+            value="0 cm">
+
+    </div>
+
+
+
+    <button
+        id="deleteFurniture"
+        class="delete-button">
+
+        <i class="fa-solid fa-trash"></i>
+
+    </button>
+
+</div>
+<!-- THREE.JS SCRIPTS -->
+<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/build/three.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/GLTFLoader.js"></script>
+
+<!-- APPLICATION SCRIPTS -->
+<script src="threeview.js"></script>
+<!-- <script src="design.js"></script> -->
+<script src="grid-draw-wall.js"></script>
+<script src="design-connect.js"></script>
+<script src="download.js"></script>
+<script src="comments.js"></script>
+<script src="test.js"></script>
+<script>
+    function getParam(param) {
+        const urlParams = new URLSearchParams(window.location.search);
+        return urlParams.get(param);
+    }
+
+    // Set back button behavior based on source parameter
+    const source = getParam('source');
+    const backBtn = document.getElementById('backBtn');
+
+    if (backBtn) {
+        if (source === 'room') {
+            backBtn.onclick = function() {
+                window.location.href = "room-select.html";
+            };
+        } else if (source === 'style') {
+            backBtn.onclick = function() {
+                window.location.href = "interir-style.html";
+            };
+        } else {
+            // Default: go to room-select
+            backBtn.onclick = function() {
+                window.location.href = "room-select.html";
+            };
+        }
+    }
+</script>
+</body>
+</html>

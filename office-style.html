@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>interior style</title>
+  <link rel="stylesheet" href="office-style.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+</head>
+<body>
+  <!-- topbaar -->
+  <section class="top-bar">
+    <div class="back-btn" onclick="goToDashboard()">
+      <i class="fa-solid fa-arrow-left"></i>
+    </div>
+  </section>
+
+  <!-- title -->
+  <section class="title">
+    <h1>Choose your <span>office design style</span></h1>
+    <p>Select a style that matches your brand and workspace needs</p>
+  </section>
+
+  <!-- select styles (cards yahan JS se aayenge) -->
+  <section class="styles" id="styles">
+    <p>Loading...</p>
+  </section>
+
+  <script>
+    // Text ko safe banane ke liye
+    function esc(text) {
+      const d = document.createElement("div");
+      d.textContent = text ?? "";
+      return d.innerHTML;
+    }
+
+    // Image ka path banao
+    // 1) database me sirf file name ho (os1.jpg) -> images/office/os1.jpg
+    // 2) database me poora path ho (img/os1.jpg) -> wahi use hoga
+    // 3) image column khali ho -> img/os1.jpg, os2.jpg ... (order ke hisab se)
+    function getImageList(item, index) {
+      const list = [];
+      const file = (item.image || "").trim();
+      if (file) {
+        if (/^(https?:)?\/\//.test(file) || file.startsWith("/")) {
+          list.push(file);                       // poora link / root path
+        } else if (file.includes("/")) {
+          list.push(file);                       // jaise img/os1.jpg
+        } else {
+          // list.push("images/office/" + file);    // PHP wala purana path
+          list.push("img/" + file);              // HTML wala folder
+          // list.push("images/" + file);
+          // list.push("uploads/" + file);
+        }
+      }
+      list.push("img/os" + (index + 1) + ".jpg"); // aakhri fallback
+      return list.map(p => encodeURI(p));
+    }
+
+    // Agar koi image na mile to agla path try karo
+    document.addEventListener("error", function (e) {
+      const img = e.target;
+      if (img.tagName !== "IMG" || !img.dataset.fallbacks) return;
+      const rest = img.dataset.fallbacks.split("|").filter(Boolean);
+      if (rest.length) {
+        img.src = rest.shift();
+        img.dataset.fallbacks = rest.join("|");
+      }
+    }, true);
+
+    // PHP se office styles mangwao
+    function loadStyles() {
+      fetch("office_style.php")
+        .then(res => res.json())
+        .then(data => {
+          const box = document.getElementById("styles");
+          if (data.error || !data.length) {
+            box.innerHTML = "<p>No styles found</p>";
+            return;
+          }
+          box.innerHTML = "";
+          data.forEach((item, index) => {
+            const name = item.style_name;
+            const imgs = getImageList(item, index);
+            box.innerHTML += `
+              <div class="card">
+                <img src="${esc(imgs[0])}" data-fallbacks="${esc(imgs.slice(1).join("|"))}" alt="${esc(name)}" />
+                <div class="card-content">
+                  <h2>${esc(name)}</h2>
+                  <p>${esc(item.description)}</p>
+                  <button class="btn" data-id="${esc(item.id)}" data-name="${esc(name)}">Select Style</button>
+                </div>
+              </div>`;
+          });
+        })
+        .catch(() => {
+          document.getElementById("styles").innerHTML = "<p>Server se data load nahi hua</p>";
+        });
+    }
+
+    // Button click
+    document.getElementById("styles").addEventListener("click", function (e) {
+      const btn = e.target.closest(".btn");
+      if (btn) selectStyle(btn.dataset.id, btn.dataset.name);
+    });
+
+    function selectStyle(styleId, styleName) {
+      localStorage.setItem("selectOfficeStyleId", styleId);
+      localStorage.setItem("selectOfficeStyle", styleName);
+      window.location.href =
+        "design.html?source=office-style&style=" + encodeURIComponent(styleName.toLowerCase());
+    }
+
+    // Back button – goes to dashboard
+    function goToDashboard() {
+      window.location.href = "Dsidebar.html";
+    }
+
+    loadStyles();
+  </script>
+</body>
+</html>

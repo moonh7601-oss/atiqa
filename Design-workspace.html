@@ -1,0 +1,44 @@
+ <!DOen">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Design WorkSpace</title>
+  <link rel="stylesheet" href="Design-workspace.cCTYPE html>
+<html lang="ss">
+  <link rel="stylesheet" href=" https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css">
+  <link rel="stylesheet"
+href="https://code.jquery.com/ui/1.13.2/themes/base/jquery-ui.css">
+
+<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+
+<script src="https://code.jquery.com/ui/1.13.2/jquery-ui.min.js"></script>
+</head>
+<body>
+  <section class="top-bar">
+    <div class="back-btn" onclick="goBack()">
+      <i class="fa-solid fa-arrow-left"></i>
+    </div>
+    <div class="bread-crumb">
+      <span onclick="gotoRoomSelectPage()">Choose Style</span>
+      <i class="fa-solid fa-chevron-right"></i>
+      <span>Select Room</span>
+      <i class="fa-solid fa-chevron-right"></i>
+      <span class="active-page">Design Workspace</span>
+    </div>
+    <div class="top-btns">
+      <button class="nav-btn"><i class="fa-regular fa-eye"></i>Preview</button>
+      <button class="nav-btn"><i class="fa-solid fa-download"></i>Download</button>
+      <button class="nav-btn"><i class="fa-solid fa-share"></i>Share</button>
+      <button class="nav-btn ai-design">Generate Design</button>
+    </div>
+  </section>
+  <section  class="mainContainer">
+      <div class="canvasContainer" id="allowdrop">
+        <div class="boxCanvas" id="canvas">   
+        </div>
+      </div>
+  </section>
+  <script src="Design-workspace.js"></script>
+</body>
+</html> 

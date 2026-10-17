@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dashboard Sidebar</title>
+  <link rel="stylesheet" href="Dsidebar.css">
+  <link rel="stylesheet" href=" https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css">
+</head>
+<body>
+     <section class="Dash-sidebar">
+       <div class="logo">   
+        <!-- <i class="fa-solid fa-house"></i> -->
+        <a href="index.html">
+          <!-- <img src="logo1.png" alt="logo" > -->
+          <img src="logo1.png" alt="logo" srcset="">
+        </a>
+        <div class="logo-text">
+          <h2>Interior</h2>
+          <span>Craft Design</span>
+        </div>
+       </div>
+    <!-- menu -->
+    <input type="file" id="realFileInput" accept="img/*" hidden>
+       <div class="menu">
+        <a href="#" class="active"><i class="fa-solid fa-table-columns"></i> Dashboard</a>
+        <a href="#" onclick="goToStylePage()"><i class="fa-solid fa-house"></i> Home Design</a>
+        <a href="#" onclick="goToOfficeStylePage()"><i class="fa-solid fa-building"></i> Office Design</a>
+        <a href="#" onclick="goToUploadPage()"><i class="fa-solid fa-image"></i> Upload Image</a>
+        <a href="#" onclick="goToAIPage()"><i class="fa-solid fa-robot"></i> AI Assistant</a>
+        <!-- <a href="#"><i class="fa-solid fa-folder"></i> My Projects</a>
+        <a href="#"><i class="fa-solid fa-heart"></i> Favorites</a> -->
+        <!-- <a href="#"><i class="fa-solid fa-gear"></i> Settings</a> -->
+      </div>
+     </section>
+<!-- Sidebar overlay (mobile only) -->
+<div class="sidebar-overlay" onclick="toggleSidebar()"></div>
+     <!-- main -->
+     <div class="main">
+     <section class="topbar">
+       <!-- topbar -->
+        <div class="left">
+          <button class="hamburger" onclick="toggleSidebar()" aria-label="Open menu">
+            <i class="fa-solid fa-bars"></i>
+          </button>
+          <div>
+            <h1>Welcome, <span id="userName">User</span>!</h1>
+            <p>What would you like to design?</p>
+          </div>
+        </div>
+      <!-- search area -->
+      <div class="right">
+        <div class="search-box">
+         <!-- <input type="text" placeholder="Search anything">
+         <i class="fa-solid fa-magnifying-glass"></i> -->
+        </div>
+      <div class="notification">
+          <!-- <i class="fa-regular fa-bell"></i>
+          <span>3</span> -->
+        </div>
+        <div class="profile" id="profileBtn">
+          <img src="https://i.pravatar.cc/100" alt="Profile">
+          <i class="fa-solid fa-chevron-down"></i>
+        
+          <!-- Dropdown -->
+          <div class="profile-dropdown" id="profileDropdown">
+            <div class="dropdown-head">
+              <img src="https://i.pravatar.cc/100" alt="Profile">
+              <div>
+                <strong id="dropName">User</strong>
+                <small id="dropEmail">user@example.com</small>
+              </div>
+            </div>
+            <div class="dropdown-divider"></div>
+            <!-- <a href="#" class="dropdown-item">
+              <i class="fa-regular fa-user"></i> My Profile
+            </a>
+            <a href="#" class="dropdown-item">
+              <i class="fa-solid fa-gear"></i> Settings
+            </a> -->
+            <div class="dropdown-divider"></div>
+            <button type="button" class="dropdown-item logout" onclick="logout()">
+              <i class="fa-solid fa-right-from-bracket"></i> Logout
+            </button>
+          </div>
+        </div>
+      </div>
+     </section>
+      <!-- Top Carda -->
+      <section class="cards">
+        <!--  card1-->
+        <div class="card">
+          <img src="img/home.jpg" >
+          <div class="content">
+            <div class="icon green">
+              <i class="fa-solid fa-house"></i>
+            </div>
+            <h2>Home Design</h2>
+            <p>Design your dream home</p>
+            <ul class="feature">
+              <li>
+                <i class="fa-solid fa-circle-check"></i>
+                Bedroom
+              </li>
+              <li>
+                <i class="fa-solid fa-circle-check"></i>
+                Kitchen
+              </li>
+              <li>
+                <i class="fa-solid fa-circle-check"></i>
+                Living Room
+              </li>
+              <li>
+                <i class="fa-solid fa-circle-check"></i>
+                Anything Else
+              </li>
+            </ul>
+              <button class="btn green" onclick="goToStylePage()">
+                <i class="fa-solid fa-arrow-right"></i>
+              </button>
+          </div>
+        </div>
+         <!-- card2 -->
+         <div class="card">
+          <img src="img/office.jpg" >
+          <div class="content">
+            <div class="icon blue">
+              <i class="fa-solid fa-building"></i>
+            </div>
+            <h2>Office Design</h2>
+            <p>Create productive and modern office space</p>
+            <ul class="feature">
+              <li>
+                <i class="fa-solid fa-circle-check"></i>
+                 Workspace
+              </li>
+              <li>
+                <i class="fa-solid fa-circle-check"></i>
+                Cabin
+              </li>
+              <li>
+                <i class="fa-solid fa-circle-check"></i>
+                Conference Room
+              </li>
+              <li>
+                <i class="fa-solid fa-circle-check"></i>
+                Anything Else
+              </li>
+            </ul>
+              <button class="btn blue" onclick="goToOfficeStylePage()">
+                <i class="fa-solid fa-arrow-right"></i>
+              </button>
+          </div>
+        </div>
+        <!-- card3 -->
+        <div class="card">
+          <img src="img/upload image.png" id="previewImage" >
+
+          <div class="content">
+
+            <div class="icon purple">
+
+              <i class="fa-regular fa-image"></i>
+
+            </div>
+            <h2>Upload Images</h2>
+
+            <p>Upload your room image and get AI suggestion</p>
+
+            <ul class="feature">
+              <li>
+                <i class="fa-solid fa-circle-check"></i>
+                Upload Images
+              </li>
+              <li>
+                <i class="fa-solid fa-circle-check"></i>
+                 AI suggestion
+              </li>
+              <li>
+                <i class="fa-solid fa-circle-check"></i>
+                 Redesign Room
+              </li>
+  
+            </ul>
+              <button class="btn purple" onclick="goToUploadPage()">
+                <i class="fa-solid fa-arrow-right"></i>
+              </button>
+          </div>
+        </div>
+        <div class="card">
+
+          <img src="img/ai.png">
+  
+          <div class="content">
+  
+            <div class="icon orange">
+              <i class="fa-solid fa-wand-magic-sparkles"></i>
+            </div>
+  
+            <h2>AI Design Assistant</h2>
+  
+            <p>
+              Describe your dream design and AI will create it.
+            </p>
+  
+            <ul class="feature">
+  
+              <li>
+                <i class="fa-solid fa-circle-check"></i>
+                Text To Design
+              </li>
+  
+              <li>
+                <i class="fa-solid fa-circle-check"></i>
+                AI Ideas
+              </li>
+  
+              <li>
+                <i class="fa-solid fa-circle-check"></i>
+                Customize Design
+              </li>
+  
+            </ul>
+  
+            <button class="btn orange" onclick="goToAIPage()">
+              <i class="fa-solid fa-arrow-right"></i>
+            </button>
+          </div> 
+        </div>
+      </section>
+      <!-- <section class="lower">
+        <div class="box">
+          <div class="box-title">
+            <h3>Recent Project</h3>
+          </div>
+          <div class="project">
+            <div class="project-card">
+              <img src="img/4.jpg">
+
+              <h4>Modern Bedroom</h4>
+  
+              <span>2 hours ago</span>
+            </div>
+            <!-- project card2 --
+            <div class="project-card">
+              <img src="img/5.jpg">
+
+              <h4>Minimal Office</h4>
+  
+              <span>1 days ago</span>
+            </div>
+            <!-- prj card 3 --
+            <div class="project-card">
+              <img src="img/7.jpg">
+
+              <h4>Luxury Living Room</h4>
+  
+              <span>2 days ago</span>
+            </div>
+              <!-- prj card 4 --
+              <div class="project-card">
+                <img src="img/3.jpg">
+  
+                <h4>Dining Room</h4>
+    
+                <span>15 days ago</span>
+              </div>
+          </div>
+        </div>
+      </section> -->
+      <!-- <section class="status">
+        <!-- status 1 --
+        <div class="status-box">       
+        <div class="stat-icon bg1">
+          <i class="fa-regular fa-folder"></i>
+        </div>
+        <div class="stat-text">
+          <h2>12</h2>
+          <p>Total Projects</p>
+        </div>
+        </div>
+          <!-- status 2 --
+          <div class="status-box">       
+            <div class="stat-icon bg2">
+              <i class="fa-regular fa-bookmark"></i>
+            </div>
+            <div class="stat-text">
+              <h2>8</h2>
+              <p>Saved Design</p>
+            </div>
+            </div>
+            <!-- status 3 --
+            <div class="status-box">       
+              <div class="stat-icon bg3">
+                <i class="fa-regular fa-image"></i>
+              </div>
+              <div class="stat-text">
+                <h2>15</h2>
+                <p>Upload Image</p>
+              </div>
+              </div>  
+                    <!-- status 4 --
+            <div class="status-box">       
+              <div class="stat-icon bg4">
+                <i class="fa-solid fa-wand-magic-sparkles"></i>
+              </div>
+              <div class="stat-text">
+                <h2>50</h2>
+                <p>Design Generated</p>
+              </div>
+              </div>  -->
+      </section>
+    </div>
+    <script>
+
+      function goToStylePage(){
+    
+        window.location.href =
+          "interir-style.html";
+    
+      }
+
+      function goToUploadPage(){
+      
+        window.location.href =
+          "uimage.html";
+    }
+    
+    function goToAIPage(){
+      
+      window.location.href =
+        "AI.html";
+  }
+  function goToOfficeStylePage(){
+      
+      window.location.href =
+        "office-style.html";
+  }
+    
+    </script>
+    <script src="Dsidebar.js"></script>
+</body>
+</html>  

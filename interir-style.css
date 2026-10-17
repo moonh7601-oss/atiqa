@@ -1,0 +1,228 @@
+*{
+  margin: 0;
+  padding: 0;
+  box-sizing:border-box;
+  font-family:Arial, Helvetica, sans-serif;
+}
+body{
+  background-color: #f4f5fb;
+  padding: 30px;
+}
+.top-bar{
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 40px;
+}
+.back-btn{
+  width:45px;
+  height:45px;
+  background:white;
+  border-radius:12px;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  box-shadow:0 2px 10px rgba(0,0,0,0.08);
+  cursor:pointer;
+}
+/* title */
+.title{
+  text-align: center;
+  margin-bottom: 45px;
+}
+.title h1{
+  font-size: 25px;
+  margin-bottom: 12px;
+  color: #1e1e2f;
+}
+.title span{
+  color: burlywood;
+}
+.title p{
+  color: gray;
+  font-size: 17px;
+}
+/* style */
+.styles{
+  display: grid;
+  grid-template-columns: repeat(4,1fr);
+  gap : 25px;
+}
+.card{
+  background-color: white;
+  border-radius: 18px;
+  overflow: hidden;
+  box-shadow: 0 2px 15px rgba(0,0,0,0.08);
+  transition: 0.3s;
+}
+.card:hover{
+  transform: translateY(-8px);
+}
+.card img{
+  width: 100%;
+  height: 100px;
+  object-fit: cover;
+}
+.card-content{
+  padding: 18px;
+}
+.card-content h2{
+  margin-bottom: 10px;
+  color: #222;
+  font-size: 24px;
+}
+.card-content p{
+  color: gray;
+  line-height: 22px;
+  margin-bottom: 20px;
+  font-size: 14px;
+}
+.btn{
+  width: 100%;
+  padding: 13px;
+  border-radius: 10px;
+  border: 2px solid burlywood;
+  background:white;
+  color:burlywood;
+  font-weight:bold;
+  cursor:pointer;
+  transition:0.3s;
+}
+.btn:hover{
+  background:burlywood;
+  color:white;
+}
+/* ai box */
+.ai-box{
+  margin-top: 50px;
+  padding: 30px;
+  border-radius: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.ai-box h2{
+  color:burlywood;
+}
+.ai-btn{
+  padding:15px 25px;
+  border:none;
+  border-radius:12px;
+  background:burlywood;
+  color:white;
+  cursor:pointer;
+  font-size:16px
+}
+/* ==========================================================
+   RESPONSIVE — INTERIOR STYLE PAGE (FORCE APPLY)
+   ========================================================== */
+
+   html, body { overflow-x: hidden !important; }
+
+   /* ---------- TABLET: max 1024px ---------- */
+   @media (max-width: 1024px) {
+     body { padding: 24px !important; }
+   
+     .top-bar { margin-bottom: 30px !important; }
+     .title { margin-bottom: 35px !important; }
+     .title h1 { font-size: 23px !important; }
+     .title p  { font-size: 15px !important; }
+   
+     .styles {
+       grid-template-columns: repeat(3, 1fr) !important;
+       gap: 20px !important;
+     }
+   
+     .card-content h2 { font-size: 20px !important; }
+     .card-content p  { font-size: 13px !important; line-height: 20px !important; }
+     .btn { padding: 12px !important; font-size: 14px !important; }
+   }
+   
+   /* ---------- SMALL TABLET: max 820px ---------- */
+   @media (max-width: 820px) {
+     .styles {
+       grid-template-columns: repeat(2, 1fr) !important;
+       gap: 18px !important;
+     }
+   }
+   
+   /* ---------- MOBILE: max 640px ---------- */
+   @media (max-width: 640px) {
+     body { padding: 18px 16px !important; }
+   
+     .top-bar { margin-bottom: 22px !important; }
+   
+     .back-btn {
+       width: 42px !important;
+       height: 42px !important;
+       border-radius: 11px !important;
+       font-size: 15px !important;
+     }
+   
+     .title { margin-bottom: 26px !important; padding: 0 4px !important; }
+     .title h1 {
+       font-size: 20px !important;
+       line-height: 1.35 !important;
+       margin-bottom: 10px !important;
+     }
+     .title p { font-size: 13.5px !important; line-height: 1.55 !important; }
+   
+     /* Cards: 1 column */
+     .styles {
+       grid-template-columns: 1fr !important;
+       gap: 16px !important;
+     }
+   
+     .card { border-radius: 16px !important; }
+     .card:hover { transform: none !important; }
+   
+     .card img { height: 200px !important; }
+   
+     .card-content { padding: 16px !important; }
+     .card-content h2 {
+       font-size: 19px !important;
+       margin-bottom: 8px !important;
+     }
+     .card-content p {
+       font-size: 13px !important;
+       line-height: 20px !important;
+       margin-bottom: 16px !important;
+     }
+   
+     .btn {
+       padding: 12px !important;
+       font-size: 13.5px !important;
+       border-radius: 10px !important;
+     }
+   }
+   
+   /* ---------- SMALL MOBILE: max 400px ---------- */
+   @media (max-width: 400px) {
+     body { padding: 14px 12px !important; }
+   
+     .title h1 { font-size: 18px !important; }
+     .title p  { font-size: 12.5px !important; }
+   
+     .card img { height: 170px !important; }
+     .card-content { padding: 14px !important; }
+     .card-content h2 { font-size: 17px !important; }
+     .card-content p  { font-size: 12.5px !important; }
+     .btn { padding: 11px !important; font-size: 13px !important; }
+   }
+   
+   /* ---------- LANDSCAPE PHONES ---------- */
+   @media (max-height: 500px) and (orientation: landscape) {
+     body { padding: 16px !important; }
+     .title { margin-bottom: 20px !important; }
+     .title h1 { font-size: 19px !important; }
+     .styles { grid-template-columns: repeat(2, 1fr) !important; gap: 14px !important; }
+     .card img { height: 150px !important; }
+   }
+   
+   /* ---------- SAFE AREA ---------- */
+   @supports (padding: max(0px)) {
+     body {
+       padding-left:  max(16px, env(safe-area-inset-left)) !important;
+       padding-right: max(16px, env(safe-area-inset-right)) !important;
+     }
+   }

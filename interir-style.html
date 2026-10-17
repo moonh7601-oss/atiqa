@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>interior style</title>
+  <link rel="stylesheet" href="interir-style.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css">
+</head>
+<body>
+  <!-- topbaar -->
+  <section class="top-bar">
+    <div class="back-btn" onclick="goToDashboard()">
+      <i class="fa-solid fa-arrow-left"></i>
+    </div>
+  </section>
+
+  <!-- title -->
+  <section class="title">
+    <h1>Choose your <span>interior design style</span></h1>
+    <p>Select a style that matches your taste</p>
+  </section>
+
+  <!-- select styles (cards yahan JS se aayenge) -->
+  <section class="styles" id="styles">
+    <p>Loading...</p>
+  </section>
+
+  <script>
+    // Agar database me image na ho to ye images use hongi
+    const fallbackImages = {
+      modern: "img/s2.jpg",
+      luxury: "img/s1.jpg",
+      minimalist: "img/s3.jpg",
+      industrial: "img/s4.jpg",
+      scandinavian: "img/s5.jpg",
+      japanese: "img/s6.jpg",
+      traditional: "img/s7.jpg",
+      bohemian: "img/s8.jpg"
+    };
+
+    function esc(text) {
+      const d = document.createElement("div");
+      d.textContent = text ?? "";
+      return d.innerHTML;
+    }
+
+    // Image ke paths: pehle database wala, phir purane HTML wala
+    function getImageList(item) {
+      const list = [];
+      const file = (item.image || "").trim();
+      if (file) {
+        if (file.includes("/")) list.push(file);
+        else { list.push("img/" + file); list.push("images/" + file); }
+      }
+      const fb = fallbackImages[(item.style_name || "").toLowerCase()];
+      if (fb) list.push(fb);
+      return list.map(p => encodeURI(p));
+    }
+
+    // Image na mile to agla path try karo
+    document.addEventListener("error", function (e) {
+      const img = e.target;
+      if (img.tagName !== "IMG" || !img.dataset.fallbacks) return;
+      const rest = img.dataset.fallbacks.split("|").filter(Boolean);
+      if (rest.length) {
+        img.src = rest.shift();
+        img.dataset.fallbacks = rest.join("|");
+      }
+    }, true);
+
+    function showError(msg) {
+      document.getElementById("styles").innerHTML = "<p style='color:red'>" + esc(msg) + "</p>";
+    }
+
+    // PHP (style.php) se database ka data mangwao
+    function loadStyles() {
+      fetch("style.php")
+        .then(res => {
+          if (!res.ok) throw new Error("style.php nahi mili ya error aaya (status " + res.status + ")");
+          return res.text();
+        })
+        .then(text => {
+          let data;
+          try {
+            data = JSON.parse(text);
+          } catch (e) {
+            throw new Error("style.php JSON nahi de rahi. Page http://localhost se kholein aur style.php wali file JSON wali version rakhein. Response: " + text.substring(0, 120));
+          }
+          if (data.error) throw new Error("Database error: " + data.error);
+          if (!data.length) throw new Error("styles table khali hai");
+
+          const box = document.getElementById("styles");
+          let html = "";
+          data.forEach(item => {
+            const name = item.style_name;
+            const imgs = getImageList(item);
+            html += `
+              <div class="card">
+                <img src="${esc(imgs[0] || "")}" data-fallbacks="${esc(imgs.slice(1).join("|"))}" alt="${esc(name)}">
+                <div class="card-content">
+                  <h2>${esc(name)}</h2>
+                  <p>${esc(item.description)}</p>
+                  <button class="btn" data-style="${esc(name)}">Select Style</button>
+                </div>
+              </div>`;
+          });
+          box.innerHTML = html;
+        })
+        .catch(err => showError(err.message));
+    }
+
+    document.getElementById("styles").addEventListener("click", function (e) {
+      const btn = e.target.closest(".btn");
+      if (btn) selectStyle(btn.dataset.style);
+    });
+
+    function selectStyle(styleName) {
+      localStorage.setItem("selectStyle", styleName);
+      window.location.href = "room-select.html";
+    }
+
+    function goToDashboard() {
+      window.location.href = "Dsidebar.html";
+    }
+
+    loadStyles();
+  </script>
+</body>
+</html>

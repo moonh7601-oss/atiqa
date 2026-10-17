@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Room selection page</title>
+  <link rel="stylesheet" href="room-select.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css">
+</head>
+<body>
+  <!-- topbar -->
+  <section class="top-bar">
+    <div class="back-btn" onclick="goBack()">
+      <i class="fa-solid fa-arrow-left"></i>
+    </div>
+    <div class="bread-crumb">
+      <span onclick="gotoStylePage()">Choose Style</span>
+      <i class="fa-solid fa-chevron-right"></i>
+      <span class="active-page">Select Room</span>
+    </div>
+  </section>
+
+  <!-- title -->
+  <section class="title">
+    <h1>Select <span>Room Type</span></h1>
+    <p>Choose the room you want to design</p>
+  </section>
+
+  <!-- rooms (cards yahan JS se aayenge) -->
+  <section class="styles" id="rooms">
+    <p>Loading...</p>
+  </section>
+
+  <script>
+    // Agar database me image column nahi hai to ye images use hongi
+    const fallbackImages = {
+      "living room": "img/r1.jpg",
+      "bedroom": "img/r2.jpg",
+      "kitchen": "img/r3.jpg",
+      "bathroom": "img/r4.jpg",
+      "dining room": "img/r5.jpg",
+      "study room": "img/r6.jpg"
+    };
+
+    // Text ko safe banane ke liye
+    function esc(text) {
+      const d = document.createElement("div");
+      d.textContent = text ?? "";
+      return d.innerHTML;
+    }
+
+    // PHP se rooms mangwao
+    function loadRooms() {
+      fetch("room.php")
+        .then(res => res.json())
+        .then(data => {
+          const box = document.getElementById("rooms");
+          if (data.error || !data.length) {
+            box.innerHTML = "<p>No rooms found</p>";
+            return;
+          }
+          box.innerHTML = "";
+          data.forEach(item => {
+            const name = item.room_name;
+            const img = item.image || fallbackImages[name.toLowerCase()] || "img/default.jpg";
+            box.innerHTML += `
+              <div class="card">
+                <img src="${esc(img)}" alt="${esc(name)}">
+                <div class="card-content">
+                  <h2>${esc(name)}</h2>
+                  <p>${esc(item.description)}</p>
+                  <button class="btn" data-id="${esc(item.id)}" data-name="${esc(name)}">Select Room</button>
+                </div>
+              </div>`;
+          });
+        })
+        .catch(() => {
+          document.getElementById("rooms").innerHTML = "<p>Server se data load nahi hua</p>";
+        });
+    }
+
+    // Button click
+    document.getElementById("rooms").addEventListener("click", function (e) {
+      const btn = e.target.closest(".btn");
+      if (btn) selectRoom(btn.dataset.id, btn.dataset.name);
+    });
+
+    function selectRoom(roomId, roomName) {
+      localStorage.setItem("selectRoomId", roomId);
+      localStorage.setItem("selectRoom", roomName);
+      window.location.href = "design.html?source=room-select&room_id=" + encodeURIComponent(roomId);
+    }
+
+    function goBack() {
+      window.location.href = "interir-style.html";
+    }
+
+    function gotoStylePage() {
+      window.location.href = "interir-style.html";
+    }
+
+    loadRooms();
+  </script>
+</body>
+</html>

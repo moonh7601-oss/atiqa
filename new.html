@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <link rel="stylesheet" href="new.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css" integrity="sha512-2SwdPD6INVrV/lHTZbO2nodKhrnDdJK9/kg2XD1r9uGqPo1cUbujc+IYdlYdEErWNu69gVcYgdxlmVmzTWnetw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+</head>
+<body>
+  <nav class="navbar">
+    <div class="nav-left">
+      <div class="menu-icon">
+        <i class="fa-solid fa-bars"></i>
+      </div>
+      <ul class="nav-links">
+        <li><a href="#" id="newplanbtn">NEW</a></li>
+        <li><a href="#">OPEN</a></li>
+        <li><a href="#">SAVE</a></li>
+        <li><a href="#">SHARE</a></li>
+      </ul>
+    </div>
+    <div class="nav-right">
+      <span class="status-text">Working on</span>
+    </div>
+  </nav>
+  <!-- sidebar -->
+  <div id="sidebar" class="sidebar">
+    <h3>Suggestion</h3>
+    <ul id="suggestionList">
+      <li onclick="showItems('window')">Windows</li>
+      <li onclick="showItems('door')">Doors</li>
+      <li onclick="showItems('bedroom')">Bedroom</li>
+      <li onclick="showItems('chair')">Chairs</li>
+      <li onclick="showItems('lamp')">Lamps</li>
+      <li onclick="showItems('plant')">Plants</li>
+    </ul>
+    <div id="itemsContainer">
+       <h3>Items</h3>
+       <div id="itemList">
+       </div>
+      </div>
+  </div>
+
+  <div id="roomModal" class="modal-overlay">
+    <div class="modal-content">
+        <span class="close-modal">&times;</span> 
+        <h2>START A NEW PLAN</h2>
+        <p>To start a new blank plan, enter the desired dimensions below and click Create.</p>
+        
+        <form id="RoomForm">
+            <div class="input-row">
+                <label>Width:</label>
+                <div class="input-container">
+                    <input type="number" id="widthfeet" value="17"> <span>ft.</span>
+                    <input type="number" id="widthinches" value="0"> <span>in.</span>
+                </div>
+            </div>
+
+            <div class="input-row">
+                <label>Length:</label>
+                <div class="input-container">
+                    <input type="number" id="lengthfeet" value="15"> <span>ft.</span>
+                    <input type="number" id="lengthinches" value="0"> <span>in.</span>
+                </div>
+            </div>
+
+            <button type="submit" id="createBtn">Create</button>
+        </form>
+    </div>
+</div>
+  <div class="mainContainer">
+    <div class="canvasContainer" id="allowdrop">
+      <div class="boxCanvas" id="canvas">   
+      </div>
+    </div>
+  </div>
+<script src="new.js"></script>
+</body>
+</html>

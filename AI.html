@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AI | Interior Design Studio</title>
+  <link rel="stylesheet" href="AI.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css">
+</head>
+<body>
+
+  <!-- ================= TOP BAR ================= -->
+  <section class="top-bar">
+    <div class="back-btn" onclick="goToDashboard()">
+      <i class="fa-solid fa-arrow-left"></i>
+    </div>
+  </section>
+
+  <!-- ================= TITLE ================= -->
+  <section class="title">
+    <h1>Create Design through AI</h1>
+    <p>AI is automatically Create design according to user requirement</p>
+  </section>
+
+  <!-- ================= MAIN ================= -->
+  <section class="container">
+
+    <!-- LEFT: Prompt -->
+    <div class="left">
+      <h2 class="section-title">Prompt</h2>
+      <p class="section-text">Describe the room or space you want</p>
+      <textarea name="type" id="Prompt" placeholder="Generate Anything"></textarea>
+
+      <!-- Example Prompts -->
+      <div class="example">
+        <h2 class="section-title">Example Prompts</h2>
+
+        <div class="example-box" onclick="setPrompt('Modern bedroom with minimal decor')">
+          Modern bedroom with minimal decor
+        </div>
+
+        <div class="example-box" onclick="setPrompt('Office space with natural light and desk')">
+          Office space with natural light and desk
+        </div>
+        <div class="example-box" onclick="setPrompt(' small kitchen with wooden cabinets')">
+          small kitchen with wooden cabinets
+        </div>
+
+        <div class="example-box" onclick="setPrompt('Balcony with plants and cozy seating')">
+          Balcony with plants and cozy seating
+        </div>
+      </div>
+    </div>
+
+    <!-- RIGHT: Generated Room -->
+    <div class="right">
+      <div class="right-top">
+        <h2 class="section-title">Generated Room</h2>
+
+        <div class="action">
+          
+          <button onclick="downloadDesign()">Download</button>
+        </div>
+      </div>
+
+      <div class="result" id="resultArea">
+        <img src="img/undraw_image-editing_qqbe.svg" id="roomImage" alt="Generated Room">
+        <div class="loader" id="loader" style="display:none;">
+          Generating your design... Please wait.
+        </div>
+      </div>
+
+      <div class="controls">
+        <button class="generate" id="generateBtn" onclick="generateRoom()">Generate</button>
+      </div>
+    </div>
+
+  </section>
+
+  <script>
+    /* =========================================================
+       AI PAGE — Robust Version
+       ========================================================= */
+    let currentPrompt = "";
+    let currentImageUrl = ""; // ✅ actual generated image URL yahan save hogi
+
+    /* ---------- Prompt set karein ---------- */
+    function setPrompt(text) {
+      document.getElementById("Prompt").value = text;
+    }
+
+    /* ---------- Design generate karein ---------- */
+    function generateRoom() {
+      const prompt = document.getElementById("Prompt").value.trim();
+      const btn = document.getElementById("generateBtn");
+      const loader = document.getElementById("loader");
+      const img = document.getElementById("roomImage");
+
+      if (!prompt) {
+        alert("Please describe your room first.");
+        return;
+      }
+
+      // Loading state
+      btn.disabled = true;
+      btn.textContent = "Generating...";
+      loader.style.display = "block";
+      img.style.opacity = "0.3";
+
+      // Data prepare karein
+      const formData = new FormData();
+      formData.append("generate", "1");
+      formData.append("prompt", prompt);
+
+      console.log("🚀 Sending request to generate_design.php...");
+      console.log("📝 Prompt:", prompt);
+
+      // Fetch call
+      fetch("generate_design.php", {
+        method: "POST",
+        body: formData
+      })
+      .then(res => {
+        console.log("📡 Response status:", res.status, res.statusText);
+
+        if (!res.ok) {
+          throw new Error("HTTP " + res.status + ": " + res.statusText);
+        }
+
+        return res.text();
+      })
+      .then(text => {
+        console.log("📦 Raw response:", text);
+
+        if (!text || text.trim() === "") {
+          throw new Error("Server ne khaali response bheja");
+        }
+
+        let data;
+        try {
+          data = JSON.parse(text);
+        } catch (e) {
+          console.error("❌ JSON parse failed. Raw text:", text);
+          throw new Error("Server ne JSON ke bajaye kuch aur bheja. F12 Console dekhein.");
+        }
+
+        console.log("✅ Parsed data:", data);
+
+        if (data.success && data.image_url) {
+          img.src = data.image_url;
+          img.style.opacity = "1";
+          img.style.display = "block";
+          currentPrompt = prompt;
+          currentImageUrl = data.image_url; // ✅ actual image URL save karein download ke liye
+          console.log("🎨 Image URL:", data.image_url);
+        } else {
+          const msg = data.message || "Design generate nahi ho saka.";
+          console.error("❌ Server error:", msg);
+          alert(msg);
+        }
+      })
+      .catch(err => {
+        console.error("❌ Error:", err);
+        alert(
+          "Server se connect nahi ho saka.\n\n" +
+          "Details: " + err.message + "\n\n" +
+          "F12 → Console mein poori tafseel dekhein."
+        );
+      })
+      .finally(() => {
+        btn.disabled = false;
+        btn.textContent = "Generate";
+        loader.style.display = "none";
+      });
+    }
+
+    /* ---------- Image download ---------- */
+    function downloadDesign() {
+      const img = document.getElementById("roomImage");
+
+      if (!currentImageUrl || img.src.includes("undraw")) {
+        alert("Pehle design generate karein.");
+        return;
+      }
+
+      // ✅ Actual generated image URL bhejein, prompt nahi
+      window.location.href = "download_design.php?file=" + encodeURIComponent(currentImageUrl);
+    }
+
+    /* ---------- Back to Dashboard ---------- */
+    function goToDashboard() {
+      window.location.href = "dashboard.php";
+    }
+  </script>
+
+</body>
+</html>

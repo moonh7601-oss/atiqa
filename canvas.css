@@ -1,0 +1,53 @@
+/* *{
+  margin: 0;
+  padding: 0;
+}
+.Canvas-container{
+  flex-grow: 1;
+  position: relative;
+  background: #ddd;
+} */
+* { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', sans-serif; }
+body { background-color: #f8fafc; display: flex; height: 100vh; overflow: hidden; }
+
+.app-container { display: flex; width: 100%; }
+
+/* Sidebars */
+.icon-bar { width: 60px; background: #fff; border-right: 1px solid #ddd; display: flex; flex-direction: column; align-items: center; padding-top: 20px; gap: 20px; }
+.icon-bar div { font-size: 10px; color: #666; cursor: pointer; }
+.icon-bar .active { color: #6366f1; font-weight: bold; }
+
+.assets-panel { width: 260px; background: #fff; border-right: 1px solid #ddd; padding: 20px; }
+.search-bar { width: 100%; padding: 8px; margin: 15px 0; border: 1px solid #eee; border-radius: 6px; }
+.furniture-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.item { border: 1px solid #eee; padding: 20px 10px; text-align: center; border-radius: 8px; cursor: pointer; font-size: 12px; }
+.item:hover { border-color: #6366f1; background: #f5f5ff; }
+
+/* Main Area */
+.main-area { flex: 1; display: flex; flex-direction: column; }
+.toolbar { height: 70px; background: #fff; border-bottom: 1px solid #ddd; display: flex; align-items: center; justify-content: space-between; padding: 0 30px; }
+.view-controls { background: #f1f5f9; padding: 5px; border-radius: 10px; }
+.view-controls button { border: none; padding: 8px 15px; border-radius: 7px; cursor: pointer; }
+.view-controls button.active { background: white; color: #6366f1; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
+
+.canvas-container { flex: 1; position: relative; display: flex; align-items: center; justify-content: center; background: #e2e8f0; }
+canvas { background: white; border: 2px solid #333; box-shadow: 0 10px 30px rgba(0,0,0,0.1); }
+.dimension-label { position: absolute; font-weight: bold; color: #64748b; }
+.dimension-label.top { top: 40px; }
+.dimension-label.left { left: 40px; transform: rotate(-90deg); }
+
+/* Config Panel */
+.config-panel { width: 300px; background: #fff; border-left: 1px solid #ddd; padding: 20px; }
+.tabs { display: flex; border-bottom: 1px solid #eee; margin-bottom: 20px; }
+.tabs button { flex: 1; padding: 10px; border: none; background: none; cursor: pointer; }
+.tabs button.active { border-bottom: 2px solid #6366f1; color: #6366f1; font-weight: bold; }
+.control-group { margin-bottom: 25px; }
+.control-group label { font-size: 12px; font-weight: bold; color: #94a3b8; display: block; margin-bottom: 10px; }
+.color-picker { display: flex; gap: 10px; }
+.dot { width: 25px; height: 25px; border-radius: 50%; border: 1px solid #ddd; cursor: pointer; }
+.input-row { display: flex; gap: 10px; }
+.input-row input { width: 50%; padding: 8px; border: 1px solid #ddd; border-radius: 5px; }
+
+.ai-box { margin-top: 50px; background: #eef2ff; padding: 20px; border-radius: 15px; text-align: center; }
+.btn-ai { margin-top: 10px; background: #6366f1; color: white; border: none; padding: 12px 20px; border-radius: 8px; width: 100%; cursor: pointer; }
+.btn-save { background: #6366f1; color: white; border: none; padding: 10px 20px; border-radius: 8px; cursor: pointer; }

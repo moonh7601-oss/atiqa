@@ -1,0 +1,102 @@
+<!-- <!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>main canvas</title>
+  <link rel="stylesheet" href="canvas.css">
+</head>
+<body>
+  <div id="Canvas-container"> </div>
+  <script type="module" src="canvas.js"></script>
+</body>
+</html> -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Office Design Tool</title>
+    <link rel="stylesheet" href="canvas.css">
+</head>
+<body>
+    <div class="app-container">
+        <!-- Left Sidebar Icons -->
+        <aside class="icon-bar">
+            <div class="active">All</div>
+            <div>Desk</div>
+            <div>Chairs</div>
+            <div>Sofa</div>
+            <div>Plants</div>
+        </aside>
+
+        <!-- Sidebar Furniture List -->
+        <aside class="assets-panel">
+            <h3>Furniture</h3>
+            <input type="text" placeholder="Search furniture..." class="search-bar">
+            <div class="furniture-grid">
+                <div class="item" onclick="addItem('Desk')">Desk</div>
+                <div class="item" onclick="addItem('Chair')">Chair</div>
+                <div class="item" onclick="addItem('Table')">Table</div>
+                <div class="item" onclick="addItem('Sofa')">Sofa</div>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-area">
+            <header class="toolbar">
+                <div class="title-info">
+                    <h2>Office Design</h2>
+                    <span>Modern Workspace</span>
+                </div>
+                <div class="view-controls">
+                    <button class="active">2D View</button>
+                    <button>3D View</button>
+                </div>
+                <div class="actions">
+                    <button class="btn-save">Save Project</button>
+                </div>
+            </header>
+
+            <div class="canvas-container">
+                <div class="dimension-label top">30 ft</div>
+                <div class="dimension-label left">15 ft</div>
+                <!-- This represents the office floor in the image -->
+                <canvas id="floorPlan"></canvas>
+            </div>
+        </main>
+
+        <!-- Right Customization Panel -->
+        <aside class="config-panel">
+            <div class="tabs">
+                <button class="active">Customize</button>
+                <button>AI Assistant</button>
+            </div>
+            
+            <div class="control-group">
+                <label>Wall Color</label>
+                <div class="color-picker">
+                    <div class="dot" style="background:#f3f4f6"></div>
+                    <div class="dot" style="background:#e5e7eb"></div>
+                    <div class="dot active" style="background:#d1d5db"></div>
+                </div>
+            </div>
+
+            <div class="control-group">
+                <label>Room Dimensions</label>
+                <div class="input-row">
+                    <input type="number" id="length" value="30">
+                    <input type="number" id="width" value="15">
+                </div>
+            </div>
+
+            <div class="ai-box">
+                <p>Need layout ideas?</p>
+                <button class="btn-ai">Generate Layout</button>
+            </div>
+        </aside>
+    </div>
+    <script src="canvas.js"></script>
+</body>
+</html>
